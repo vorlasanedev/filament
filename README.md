@@ -65,6 +65,10 @@ https://www.youtube.com/watch?v=ibDPgHNyM5s
 
 ```
 2. Crearte CRUD
+```
 https://www.youtube.com/watch?v=H6oj3zWr2gE
+```
 3. Installation & Setup Guide - FilamentPHP v4 (Ep 1)
+```
 https://www.youtube.com/watch?v=Fy0XCg1XBjQ
+```
