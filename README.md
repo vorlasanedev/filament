@@ -57,3 +57,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Tutorial 
+1. installation
+```
+https://www.youtube.com/watch?v=ibDPgHNyM5s
+
+```
+2. Crearte CRUD
+https://www.youtube.com/watch?v=H6oj3zWr2gE
+3. Installation & Setup Guide - FilamentPHP v4 (Ep 1)
+https://www.youtube.com/watch?v=Fy0XCg1XBjQ
