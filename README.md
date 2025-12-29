@@ -72,3 +72,13 @@ https://www.youtube.com/watch?v=H6oj3zWr2gE
 ```
 https://www.youtube.com/watch?v=Fy0XCg1XBjQ
 ```
+## Create Resource
+```
+php artisan make:filament-resource Employee
+```
+## Create view on record table
+```
+php artisan make:filament-page ViewEmployee --resource=EmployeeResource --type=ViewRecord
+```
+
+--> continue filament validation field 26:06

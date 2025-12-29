@@ -18,7 +18,7 @@ use App\Filament\Resources\Employees\Tables\EmployeesTable;
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
-
+    protected static ?string $navigationLabel = 'All Employees';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 
     public static function form(Schema $schema): Schema
@@ -42,9 +42,12 @@ class EmployeeResource extends Resource
     {
         return [
             'index' => ListEmployees::route('/'),
-            'create' => CreateEmployee::route('/create'),
-            'edit' => EditEmployee::route('/{record}/edit'),
-            'view' => ViewEmployee::route('/{record}/view'),
+
+            // ot enable model form comment bellow
+
+            // 'create' => CreateEmployee::route('/create'),
+            // 'edit' => EditEmployee::route('/{record}/edit'),
+            // 'view' => ViewEmployee::route('/{record}/view'),
         ];
     }
 }
