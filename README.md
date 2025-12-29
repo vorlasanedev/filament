@@ -82,3 +82,9 @@ php artisan make:filament-page ViewEmployee --resource=EmployeeResource --type=V
 ```
 
 --> continue filament validation field 26:06
+## Exportor
+https://www.youtube.com/watch?v=P3ektl0bBTs
+```
+php artisan make:filament-exporter Employee --generate
+php artisan make:filament-importer Employee --generate
+```

@@ -2,13 +2,19 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
+
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Exports\EmployeeExporter;
+use App\Filament\Imports\EmployeeImporter;
+use Filament\Tables\Columns\TextInputColumn;
 
 class EmployeesTable
 {
@@ -16,7 +22,7 @@ class EmployeesTable
     {
         return $table
             ->columns([
-                TextColumn::make('first_name')
+                TextInputColumn::make('first_name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('last_name')
@@ -39,6 +45,13 @@ class EmployeesTable
             ])
             ->filters([
                 //
+            ])
+            ->headerActions([
+                ExportBulkAction::make()
+                    ->exporter(EmployeeExporter::class),
+                ImportAction::make()
+                    ->importer(EmployeeImporter::class),
+
             ])
             ->recordActions([
                 ViewAction::make(),
