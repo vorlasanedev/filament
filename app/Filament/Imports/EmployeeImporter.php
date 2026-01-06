@@ -26,7 +26,7 @@ class EmployeeImporter extends Importer
                 ->rules(['required', 'email', 'max:255']),
             ImportColumn::make('phone')
                 ->requiredMapping()
-                ->rules(['required', 'max:255']),
+                ->rules(['required', 'regex:/^(20|21|30)\d{8}$/']),
             ImportColumn::make('position')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
@@ -39,6 +39,14 @@ class EmployeeImporter extends Importer
 
     public function resolveRecord(): Employee
     {
+        if (($email = $this->data['email'] ?? null) && $employee = Employee::where('email', $email)->first()) {
+            return $employee;
+        }
+
+        if (($phone = $this->data['phone'] ?? null) && $employee = Employee::where('phone', $phone)->first()) {
+            return $employee;
+        }
+
         return new Employee();
     }
 
@@ -51,5 +59,18 @@ class EmployeeImporter extends Importer
         }
 
         return $body;
+    }
+
+    public static function getCompletedNotificationTitle(Import $import): string
+    {
+        if ($import->successful_rows === 0 && $import->total_rows > 0) {
+            return 'Import Failed';
+        }
+
+        if ($import->getFailedRowsCount() > 0) {
+            return 'Import Completed with Errors';
+        }
+
+        return 'Import Completed';
     }
 }

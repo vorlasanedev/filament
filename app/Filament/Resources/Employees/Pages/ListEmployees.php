@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Employees\Pages;
 
+use App\Filament\Imports\EmployeeImporter;
 use App\Filament\Resources\Employees\EmployeeResource;
 use Filament\Actions\CreateAction;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListEmployees extends ListRecords
@@ -15,8 +17,10 @@ class ListEmployees extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ImportAction::make()
+                ->importer(EmployeeImporter::class),
             CreateAction::make()
-            ->createAnother(false),
+                ->createAnother(false),
         ];
     }
 }

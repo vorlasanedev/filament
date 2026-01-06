@@ -85,6 +85,16 @@ php artisan make:filament-page ViewEmployee --resource=EmployeeResource --type=V
 ## Exportor
 https://www.youtube.com/watch?v=P3ektl0bBTs
 ```
+php artisan make:queue-batches-table
+php artisan make:notifications-table
+php artisan vendor:publish --tag=filament-actions-migrations
+php artisan migrate
+
 php artisan make:filament-exporter Employee --generate
 php artisan make:filament-importer Employee --generate
+```
+## filament invoice
+```
+https://www.youtube.com/watch?v=IQ6DQ3F9CMc
+https://www.youtube.com/watch?v=bb6Iz_OOs3c
 ```
