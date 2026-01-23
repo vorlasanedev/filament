@@ -34,7 +34,7 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            \App\Filament\Resources\Employees\RelationManagers\ActivitiesRelationManager::class,
         ];
     }
 
@@ -43,11 +43,11 @@ class EmployeeResource extends Resource
         return [
             'index' => ListEmployees::route('/'),
 
-            // ot enable model form comment bellow
+            // to enable model form comment bellow
 
-            // 'create' => CreateEmployee::route('/create'),
-            // 'edit' => EditEmployee::route('/{record}/edit'),
-            // 'view' => ViewEmployee::route('/{record}/view'),
+            'create' => CreateEmployee::route('/create'),
+            'edit' => EditEmployee::route('/{record}/edit'),
+            'view' => ViewEmployee::route('/{record}/view'),
         ];
     }
 }
