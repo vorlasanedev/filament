@@ -15,6 +15,9 @@ use Filament\Tables\Columns\TextColumn;
 use App\Filament\Exports\EmployeeExporter;
 use App\Filament\Imports\EmployeeImporter;
 use Filament\Tables\Columns\TextInputColumn;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EmployeesExport;
+use Filament\Actions\Action;
 
 class EmployeesTable
 {
@@ -47,8 +50,14 @@ class EmployeesTable
                 //
             ])
             ->headerActions([
-                ExportBulkAction::make()
-                    ->exporter(EmployeeExporter::class),
+                Action::make('export_excel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\EmployeesExport, 'employees.xlsx');
+                    }),
+                // ExportBulkAction::make()
+                //     ->exporter(EmployeeExporter::class),
                 ImportAction::make()
                     ->importer(EmployeeImporter::class),
 
