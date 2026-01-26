@@ -11,7 +11,9 @@ use Filament\Actions\ImportAction;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\ExportBulkAction;
+use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Actions\Action as TableAction;
+use Filament\Actions\ActionGroup as TableActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use App\Filament\Exports\EmployeeExporter;
 use App\Filament\Imports\EmployeeImporter;
@@ -97,18 +99,44 @@ class EmployeesTable
                     ->importer(EmployeeImporter::class),
 
             ])
-            ->recordActions([
+            ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
+                // DeleteAction::make(),
+                TableActionGroup::make([
+                    TableAction::make('print')
+                        ->label('Print')
+                        ->icon('heroicon-o-printer')
+                        ->url(fn (Employee $record) => route('print.employees', ['ids' => $record->id]))
+                        ->openUrlInNewTab(),
+                    TableAction::make('preview_pdf')
+                        ->label('Preview PDF')
+                        ->icon('heroicon-o-eye')
+                        ->url(fn (Employee $record) => route('export.employees.pdf', ['ids' => $record->id, 'preview' => true]))
+                        ->openUrlInNewTab(),
+                    DeleteAction::make(),
+                ]),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+
                     BulkAction::make('print')
                         ->label('Print Selected')
                         ->icon('heroicon-o-printer')
                         ->action(fn (Collection $records) => redirect()->route('print.employees', ['ids' => $records->pluck('id')->implode(',')]))
+                        ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('preview_pdf')
+                        ->label('Preview PDF')
+                        ->icon('heroicon-o-eye')
+                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'preview' => true]))
+                        ->openUrlInNewTab()
+                        ->deselectRecordsAfterCompletion(),
+                    
+                    BulkAction::make('export_pdf')
+                        ->label('Export PDF')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(',')]))
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
