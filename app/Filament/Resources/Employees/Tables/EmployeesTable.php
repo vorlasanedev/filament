@@ -19,6 +19,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EmployeesExport;
 use Filament\Actions\Action;
 
+use Filament\Tables\Filters\SelectFilter;
+use App\Models\Employee;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Builder;
+
 class EmployeesTable
 {
     public static function configure(Table $table): Table
@@ -27,27 +33,54 @@ class EmployeesTable
             ->columns([
                 TextInputColumn::make('first_name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('last_name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('email')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('phone')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('position')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('salary')
                     ->searchable()
                     ->sortable()
-                    ->money('usd'),
+                    ->money('usd')
+                    ->toggleable(),
                 // ->money('lak'),
             ])
             ->filters([
-                //
+                SelectFilter::make('position')
+                    ->options(Employee::pluck('position', 'position')->unique()),
+                Filter::make('salary')
+                    ->form([
+                        TextInput::make('salary_from')
+                            ->numeric()
+                            ->label('Salary From'),
+                        TextInput::make('salary_to')
+                            ->numeric()
+                            ->label('Salary To'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['salary_from'],
+                                fn (Builder $query, $date): Builder => $query->where('salary', '>=', $date),
+                            )
+                            ->when(
+                                $data['salary_to'],
+                                fn (Builder $query, $date): Builder => $query->where('salary', '<=', $date),
+                            );
+                    })
             ])
             ->headerActions([
                 Action::make('export_excel')
