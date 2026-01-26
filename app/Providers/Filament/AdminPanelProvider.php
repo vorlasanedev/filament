@@ -29,8 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('15rem')
-            ->brandLogo(asset('images/logo.png'))
-            ->brandLogoHeight('3rem')
+->brandLogo(fn () => view('filament.brand'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
