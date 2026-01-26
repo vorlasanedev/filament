@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ImportAction;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ExportBulkAction;
@@ -24,6 +25,7 @@ use App\Models\Employee;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class EmployeesTable
 {
@@ -103,6 +105,11 @@ class EmployeesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('print')
+                        ->label('Print Selected')
+                        ->icon('heroicon-o-printer')
+                        ->action(fn (Collection $records) => redirect()->route('print.employees', ['ids' => $records->pluck('id')->implode(',')]))
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
