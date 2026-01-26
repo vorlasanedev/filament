@@ -36,26 +36,32 @@ class EmployeesTable
         return $table
             ->columns([
                 TextInputColumn::make('first_name')
+                    ->label(__('fields.first_name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('last_name')
+                    ->label(__('fields.last_name'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('email')
+                    ->label(__('fields.email'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('phone')
+                    ->label(__('fields.phone'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('position')
+                    ->label(__('fields.position'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('salary')
+                    ->label(__('fields.salary'))
                     ->searchable()
                     ->sortable()
                     ->money('usd')
@@ -64,15 +70,17 @@ class EmployeesTable
             ])
             ->filters([
                 SelectFilter::make('position')
+                    ->label(__('fields.position'))
                     ->options(Employee::pluck('position', 'position')->unique()),
                 Filter::make('salary')
+                    ->label(__('fields.salary'))
                     ->form([
                         TextInput::make('salary_from')
                             ->numeric()
-                            ->label('Salary From'),
+                            ->label(__('fields.salary_from')),
                         TextInput::make('salary_to')
                             ->numeric()
-                            ->label('Salary To'),
+                            ->label(__('fields.salary_to')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

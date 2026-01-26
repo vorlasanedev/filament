@@ -22,6 +22,21 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('navigation.user');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('navigation.users');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

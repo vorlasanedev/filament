@@ -98,3 +98,35 @@ php artisan make:filament-importer Employee --generate
 https://www.youtube.com/watch?v=IQ6DQ3F9CMc
 https://www.youtube.com/watch?v=bb6Iz_OOs3c
 ```
+
+## Localization & Translations
+
+### 1. Language Switcher
+- The language switcher is located in the top navigation bar.
+- Supported languages: **English** (en) and **Lao** (lo).
+
+### 2. Translation Files
+- **English**: `lang/en/`
+- **Lao**: `lang/lo/`
+
+### 3. How to Translate
+To add a new translation:
+1.  Open the appropriate file in `lang/en/` (e.g., `fields.php`, `navigation.php`) and add your key-value pair.
+    ```php
+    // lang/en/fields.php
+    return [
+       'new_field' => 'New Field Name',
+    ];
+    ```
+2.  Open the corresponding file in `lang/lo/` and add the translation.
+    ```php
+    // lang/lo/fields.php
+    return [
+       'new_field' => 'ຊື່ຟິວໃໝ່',
+    ];
+    ```
+3.  Use the key in your code (Filament Resource, Form, or Table):
+    ```php
+    ->label(__('fields.new_field'))
+    ```
+

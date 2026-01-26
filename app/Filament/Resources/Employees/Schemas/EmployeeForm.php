@@ -13,23 +13,23 @@ class EmployeeForm
         return $schema
             ->components([
                 TextInput::make('first_name')
-                    ->label('First Name')
+                    ->label(__('fields.first_name'))
                     ->required()
                     ->minLength(2)
                     ->maxLength(50),
                 TextInput::make('last_name')
-                    ->label('Last Name')
+                    ->label(__('fields.last_name'))
                     ->required()
                     ->minLength(2)
                     ->maxLength(50),
                 TextInput::make('email')
-                    ->label('Email')
+                    ->label(__('fields.email'))
                     ->required()
                     ->email()
                     ->maxLength(50)
                     ->unique(Employee::class, 'email', ignoreRecord: true),
                 TextInput::make('phone')
-                    ->label('Phone')
+                    ->label(__('fields.phone'))
                     ->required()
                     ->tel()
                     ->unique(Employee::class, 'phone', ignoreRecord: true)
@@ -39,12 +39,12 @@ class EmployeeForm
                     ->maxLength(10)
                     ->placeholder('2000000000'),
                 TextInput::make('position')
-                    ->label('Job Title')
+                    ->label(__('fields.position'))
                     ->required()
                     ->minLength(4) // Corrected here
                     ->maxLength(150),
                 TextInput::make('salary')
-                    ->label('Salary')
+                    ->label(__('fields.salary'))
                     ->required()
                     ->numeric()
                     ->minValue(100)
