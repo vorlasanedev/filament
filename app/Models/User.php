@@ -21,6 +21,11 @@ class User extends Authenticatable implements JWTSubject, FilamentUser
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, LogsActivity;
 
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
