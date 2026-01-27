@@ -32,9 +32,9 @@ class User extends Authenticatable implements JWTSubject, FilamentUser
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'avatar_url',
     ];
 
     /**
