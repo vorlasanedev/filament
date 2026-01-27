@@ -23,4 +23,8 @@ class ListEmployees extends ListRecords
                 ->createAnother(false),
         ];
     }
+    public function getMaxContentWidth(): ?string
+    {
+        return 'full';
+    }
 }

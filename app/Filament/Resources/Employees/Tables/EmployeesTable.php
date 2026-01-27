@@ -34,9 +34,11 @@ class EmployeesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->striped()
             ->columns([
                 TextInputColumn::make('first_name')
                     ->label(__('fields.first_name'))
+                    ->extraAttributes(['class' => 'py-1'])
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
