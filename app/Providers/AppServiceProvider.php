@@ -21,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
     {
         \BezhanSalleh\LanguageSwitch\LanguageSwitch::configureUsing(function (\BezhanSalleh\LanguageSwitch\LanguageSwitch $switch) {
             $switch
-                ->locales(['en', 'lo']); // also supports a closure
+                ->locales(['en', 'lo'])
+                ->flags([
+                    'en' => asset('images/flags/usa.png'),
+                    'lo' => asset('images/flags/laos.png'),
+                ]);
         });
     }
 }
