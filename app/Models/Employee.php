@@ -24,6 +24,7 @@ class Employee extends Model
         'position_id',
         'salary',
         'user_id',
+        'profile_picture',
     ];
 
     public $translatable = [

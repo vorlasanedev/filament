@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use App\Filament\Exports\EmployeeExporter;
 use App\Filament\Imports\EmployeeImporter;
 use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EmployeesExport;
 use Filament\Actions\Action;
@@ -36,6 +37,8 @@ class EmployeesTable
         return $table
             ->striped()
             ->columns([
+                ImageColumn::make('profile_picture')
+                    ->circular(),
                 TextInputColumn::make('first_name')
                     ->label(__('fields.first_name'))
                     ->extraAttributes(['class' => 'py-1'])

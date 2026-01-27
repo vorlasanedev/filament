@@ -62,6 +62,10 @@ class EmployeeForm
                     ->step(0.01)
                     ->placeholder('5000.00')
                     ->helperText('Enter the Salary between 100.00 and 999,999,999.99'),
+                \Filament\Forms\Components\FileUpload::make('profile_picture')
+                    ->avatar()
+                    ->directory('employee-photos')
+                    ->columnSpanFull(),
             ]);
     }
 }
