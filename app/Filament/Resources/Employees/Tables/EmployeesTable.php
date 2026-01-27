@@ -97,16 +97,11 @@ class EmployeesTable
                     })
             ])
             ->headerActions([
-                 Action::make('export_excel')
-                    ->label('Export All Excel')
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->action(function () {
-                        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\EmployeesExport, 'employees.xlsx');
-                    }),
+
                 // ExportBulkAction::make()
                 //     ->exporter(EmployeeExporter::class),
-                ImportAction::make()
-                    ->importer(EmployeeImporter::class),
+                // ImportAction::make()
+                //     ->importer(EmployeeImporter::class),
 
             ])
             ->actions([
