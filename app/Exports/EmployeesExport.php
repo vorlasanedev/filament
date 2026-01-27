@@ -78,7 +78,7 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
 
     public function styles(Worksheet $sheet)
     {
-        $fontFamily = app()->getLocale() === 'lo' ? 'Saysettha OT' : 'Times New Roman';
+        $fontFamily = app()->getLocale() === 'lo' ? 'Phetsarath OT' : 'Times New Roman';
 
         // Set default font for the entire sheet
         $sheet->getParent()->getDefaultStyle()->getFont()->setName($fontFamily);
@@ -114,7 +114,7 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
                 // Merge Title Row
                 $sheet->mergeCells("A1:{$lastColumn}1");
                 
-                $fontFamily = app()->getLocale() === 'lo' ? 'Saysettha OT' : 'Times New Roman';
+                $fontFamily = app()->getLocale() === 'lo' ? 'Phetsarath OT' : 'Times New Roman';
 
                 // Set Title Text and specifically style it
                 $sheet->setCellValue('A1', __('navigation.employee_list'));

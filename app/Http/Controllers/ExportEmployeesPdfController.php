@@ -10,11 +10,17 @@ class ExportEmployeesPdfController extends Controller
 {
     public function __invoke(Request $request)
     {
+        if ($request->has('locale')) {
+            app()->setLocale($request->get('locale'));
+        }
+
         $ids = explode(',', $request->query('ids', ''));
         
         $employees = Employee::whereIn('id', $ids)->get();
 
-        $pdf = Pdf::loadView('filament.pages.employees-pdf', compact('employees'));
+        $fontFamily = app()->getLocale() === 'lo' ? 'Phetsarath OT' : 'sans-serif';
+
+        $pdf = Pdf::loadView('filament.pages.employees-pdf', compact('employees', 'fontFamily'));
 
         if ($request->has('preview')) {
             return $pdf->stream('employees-report.pdf');

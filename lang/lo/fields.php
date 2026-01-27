@@ -13,4 +13,9 @@ return [
     'created_at' => 'ສ້າງເມື່ອ',
     'updated_at' => 'ອັບເດດເມື່ອ',
     'name' => 'ຊື່',
+    'report_summary' => 'ບົດລາຍງານສັງລວມ',
+    'total_employees' => 'ຈຳນວນພະນັກງານທັງໝົດ',
+    'total_salaries' => 'ລວມເງິນເດືອນທັງໝົດ',
+    'date' => 'ວັນທີ',
+    'generated_by' => 'ສ້າງໂດຍລະບົບຈັດການພະນັກງານ Filament',
 ];

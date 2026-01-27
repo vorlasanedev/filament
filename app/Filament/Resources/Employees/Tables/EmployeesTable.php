@@ -120,7 +120,7 @@ class EmployeesTable
                     TableAction::make('preview_pdf')
                         ->label('Preview PDF')
                         ->icon('heroicon-o-eye')
-                        ->url(fn (Employee $record) => route('export.employees.pdf', ['ids' => $record->id, 'preview' => true]))
+                        ->url(fn (Employee $record) => route('export.employees.pdf', ['ids' => $record->id, 'preview' => true, 'locale' => app()->getLocale()]))
                         ->openUrlInNewTab(),
                     DeleteAction::make(),
                 ]),
@@ -143,14 +143,14 @@ class EmployeesTable
                     BulkAction::make('preview_pdf')
                         ->label('Preview PDF')
                         ->icon('heroicon-o-eye')
-                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'preview' => true]))
+                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'preview' => true, 'locale' => app()->getLocale()]))
                         ->openUrlInNewTab()
                         ->deselectRecordsAfterCompletion(),
                     
                     BulkAction::make('export_pdf')
                         ->label('Export PDF')
                         ->icon('heroicon-o-arrow-down-tray')
-                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(',')]))
+                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'locale' => app()->getLocale()]))
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
