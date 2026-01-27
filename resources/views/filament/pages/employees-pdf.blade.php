@@ -6,25 +6,25 @@
     <style>
         @font-face {
             font-family: 'Phetsarath OT';
-            src: url('{{ public_path('fonts/Phetsarath OT.ttf') }}') format('truetype');
+            src: url("{{ public_path('fonts/Phetsarath OT.ttf') }}") format('truetype');
             font-weight: normal;
             font-style: normal;
         }
         @font-face {
             font-family: 'Phetsarath OT';
-            src: url('{{ public_path('fonts/Phetsarath OT_Bold.ttf') }}') format('truetype');
+            src: url("{{ public_path('fonts/Phetsarath OT_Bold.ttf') }}") format('truetype');
             font-weight: bold;
             font-style: normal;
         }
         @font-face {
             font-family: 'Phetsarath OT';
-            src: url('{{ public_path('fonts/Phetsarath OT Italic.ttf') }}') format('truetype');
+            src: url("{{ public_path('fonts/Phetsarath OT Italic.ttf') }}") format('truetype');
             font-weight: normal;
             font-style: italic;
         }
         @font-face {
             font-family: 'Phetsarath OT';
-            src: url('{{ public_path('fonts/Phetsarath OT_Bold_Italic.ttf') }}') format('truetype');
+            src: url("{{ public_path('fonts/Phetsarath OT_Bold_Italic.ttf') }}") format('truetype');
             font-weight: bold;
             font-style: italic;
         }

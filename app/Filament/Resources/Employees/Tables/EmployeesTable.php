@@ -76,7 +76,7 @@ class EmployeesTable
                     ->label(__('fields.position')),
                 Filter::make('salary')
                     ->label(__('fields.salary'))
-                    ->form([
+                    ->schema([
                         TextInput::make('salary_from')
                             ->numeric()
                             ->label(__('fields.salary_from')),
@@ -104,7 +104,7 @@ class EmployeesTable
                 //     ->importer(EmployeeImporter::class),
 
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 // DeleteAction::make(),
@@ -122,41 +122,39 @@ class EmployeesTable
                     DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+            ->groupedBulkActions([
+                DeleteBulkAction::make(),
 
                 BulkAction::make('export_excel')
-                        ->label('Export Excel')
-                        ->icon('heroicon-o-arrow-down-tray')
-                        ->action(fn (Collection $records) => \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\EmployeesExport($records), 'employees.xlsx'))
-                        ->deselectRecordsAfterCompletion(),
-                        
-                    BulkAction::make('print')
-                        ->label('Print Selected')
-                        ->icon('heroicon-o-printer')
-                        ->action(fn (Collection $records) => redirect()->route('print.employees', ['ids' => $records->pluck('id')->implode(',')]))
-                        ->deselectRecordsAfterCompletion(),
-                    BulkAction::make('preview_pdf')
-                        ->label('Preview PDF')
-                        ->icon('heroicon-o-eye')
-                        ->action(function (Collection $records, \Livewire\Component $livewire) {
-                            $url = route('export.employees.pdf', [
-                                'ids' => $records->pluck('id')->implode(','), 
-                                'preview' => true, 
-                                'locale' => app()->getLocale()
-                            ]);
-                            
-                            $livewire->js("window.open('{$url}', '_blank')");
-                        })
-                        ->deselectRecordsAfterCompletion(),
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (Collection $records) => Excel::download(new EmployeesExport($records), 'employees.xlsx'))
+                    ->deselectRecordsAfterCompletion(),
                     
-                    BulkAction::make('export_pdf')
-                        ->label('Export PDF')
-                        ->icon('heroicon-o-arrow-down-tray')
-                        ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'locale' => app()->getLocale()]))
-                        ->deselectRecordsAfterCompletion(),
-                ]),
+                BulkAction::make('print')
+                    ->label('Print Selected')
+                    ->icon('heroicon-o-printer')
+                    ->action(fn (Collection $records) => redirect()->route('print.employees', ['ids' => $records->pluck('id')->implode(',')]))
+                    ->deselectRecordsAfterCompletion(),
+                BulkAction::make('preview_pdf')
+                    ->label('Preview PDF')
+                    ->icon('heroicon-o-eye')
+                    ->action(function (Collection $records, \Livewire\Component $livewire) {
+                        $url = route('export.employees.pdf', [
+                            'ids' => $records->pluck('id')->implode(','), 
+                            'preview' => true, 
+                            'locale' => app()->getLocale()
+                        ]);
+                        
+                        $livewire->js("window.open('{$url}', '_blank')");
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                
+                BulkAction::make('export_pdf')
+                    ->label('Export PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (Collection $records) => redirect()->route('export.employees.pdf', ['ids' => $records->pluck('id')->implode(','), 'locale' => app()->getLocale()]))
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 }
