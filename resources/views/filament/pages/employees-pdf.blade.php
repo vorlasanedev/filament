@@ -44,7 +44,8 @@
 <body>
     <div class="header clearfix">
         <div class="logo">
-             <h1>iFundev</h1>
+            <img src="{{ public_path('images/logo.png') }}" alt="Logo" style="height: 40px; vertical-align: middle;">
+            <span style="font-size: 24px; font-weight: bold; vertical-align: middle; margin-left: 10px;">iFundev</span>
         </div>
         <div class="invoice-details">
             <h2>{{ __('navigation.employee_list') }}</h2>
