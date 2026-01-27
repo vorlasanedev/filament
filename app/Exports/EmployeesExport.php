@@ -20,6 +20,8 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
 {
     protected ?Collection $records;
 
+    private $row = 0;
+
     public function __construct(?Collection $records = null)
     {
         $this->records = $records;
@@ -37,27 +39,27 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
     public function headings(): array
     {
         return [
-            'ID',
-            'First name',
-            'Last name',
-            'Email',
-            'Phone',
-            'Position',
-            'Salary',
-            'Created at',
-            'Updated at',
+            __('fields.No'),
+            __('fields.first_name'),
+            __('fields.last_name'),
+            __('fields.email'),
+            __('fields.phone'),
+            __('fields.position'),
+            __('fields.salary'),
+            __('fields.created_at'),
+            __('fields.updated_at'),
         ];
     }
 
     public function map($employee): array
     {
         return [
-            $employee->id,
+            ++$this->row,
             $employee->first_name,
             $employee->last_name,
             $employee->email,
             $employee->phone,
-            $employee->position,
+            $employee->position?->name,
             $employee->salary,
             $employee->created_at,
             $employee->updated_at,
@@ -76,13 +78,18 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
 
     public function styles(Worksheet $sheet)
     {
-        // Set default font for the entire sheet to Phetsarath OT as seen in the image
-        $sheet->getParent()->getDefaultStyle()->getFont()->setName('Phetsarath OT');
+        $fontFamily = app()->getLocale() === 'lo' ? 'Saysettha OT' : 'Times New Roman';
+
+        // Set default font for the entire sheet
+        $sheet->getParent()->getDefaultStyle()->getFont()->setName($fontFamily);
 
         return [
             // Style the header row (Row 2)
             2 => [
-                'font' => ['bold' => true],
+                'font' => [
+                    'bold' => true,
+                    'size' => 12,
+                ],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'startColor' => ['rgb' => 'BDD7EE'], // Light blue as seen in image
@@ -107,11 +114,13 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
                 // Merge Title Row
                 $sheet->mergeCells("A1:{$lastColumn}1");
                 
+                $fontFamily = app()->getLocale() === 'lo' ? 'Saysettha OT' : 'Times New Roman';
+
                 // Set Title Text and specifically style it
-                $sheet->setCellValue('A1', 'ລາຍການພະນັກງານ');
+                $sheet->setCellValue('A1', __('navigation.employee_list'));
                 $sheet->getStyle('A1')->applyFromArray([
                     'font' => [
-                        'name' => 'Phetsarath OT',
+                        'name' => $fontFamily,
                         'bold' => true,
                         'size' => 20, // Increased to 20 as requested
                     ],
@@ -142,8 +151,8 @@ class EmployeesExport implements FromQuery, WithHeadings, WithMapping, WithStyle
                 $footerValueRow = $highestRow + 3;
 
                 // Labels
-                $sheet->setCellValue("H{$footerLabelRow}", 'Export By');
-                $sheet->setCellValue("I{$footerLabelRow}", 'Export Date');
+                $sheet->setCellValue("H{$footerLabelRow}", __('navigation.export_by'));
+                $sheet->setCellValue("I{$footerLabelRow}", __('navigation.export_date'));
 
                 // Values
                 $userName = auth()->user()?->name ?? 'System';

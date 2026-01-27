@@ -16,12 +16,14 @@ class EmployeeForm
                     ->label(__('fields.first_name'))
                     ->required()
                     ->minLength(2)
-                    ->maxLength(50),
+                    ->maxLength(50)
+                    ->formatStateUsing(fn ($record) => $record?->first_name),
                 TextInput::make('last_name')
                     ->label(__('fields.last_name'))
                     ->required()
                     ->minLength(2)
-                    ->maxLength(50),
+                    ->maxLength(50)
+                    ->formatStateUsing(fn ($record) => $record?->last_name),
                 TextInput::make('email')
                     ->label(__('fields.email'))
                     ->required()
@@ -38,11 +40,19 @@ class EmployeeForm
                     ->validationAttribute('Phone number')
                     ->maxLength(10)
                     ->placeholder('2000000000'),
-                TextInput::make('position')
+                \Filament\Forms\Components\Select::make('position_id')
                     ->label(__('fields.position'))
-                    ->required()
-                    ->minLength(4) // Corrected here
-                    ->maxLength(150),
+                    ->relationship('position', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label(__('fields.name'))
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->createOptionModalHeading(__('navigation.create_position'))
+                    ->required(),
                 TextInput::make('salary')
                     ->label(__('fields.salary'))
                     ->required()

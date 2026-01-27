@@ -7,21 +7,34 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Translatable\HasTranslations;
 
 class Employee extends Model
 {
+
     use LogsActivity;
-    
+    use HasTranslations;
+
     // use SoftDeletes;
     protected $fillable=[
         'first_name',
         'last_name',
         'email',
         'phone',
-        'position',
+        'position_id',
         'salary',
         'user_id',
     ];
+
+    public $translatable = [
+        'first_name',
+        'last_name',
+    ];
+    
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
 
     public function user()
     {

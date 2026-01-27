@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'No' => 'ລຳດັບ',
     'first_name' => 'ຊື່',
     'last_name' => 'ນາມສະກຸນ',
     'email' => 'ອີເມວ',
@@ -11,4 +12,5 @@ return [
     'salary_to' => 'ເງິນເດືອນສູງສຸດ',
     'created_at' => 'ສ້າງເມື່ອ',
     'updated_at' => 'ອັບເດດເມື່ອ',
+    'name' => 'ຊື່',
 ];

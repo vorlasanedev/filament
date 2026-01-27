@@ -55,7 +55,7 @@ class EmployeesTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('position')
+                TextColumn::make('position.name')
                     ->label(__('fields.position'))
                     ->searchable()
                     ->sortable()
@@ -70,8 +70,8 @@ class EmployeesTable
             ])
             ->filters([
                 SelectFilter::make('position')
-                    ->label(__('fields.position'))
-                    ->options(Employee::pluck('position', 'position')->unique()),
+                    ->relationship('position', 'name')
+                    ->label(__('fields.position')),
                 Filter::make('salary')
                     ->label(__('fields.salary'))
                     ->form([
@@ -95,8 +95,8 @@ class EmployeesTable
                     })
             ])
             ->headerActions([
-                Action::make('export_excel')
-                    ->label('Export Excel')
+                 Action::make('export_excel')
+                    ->label('Export All Excel')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function () {
                         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\EmployeesExport, 'employees.xlsx');
@@ -129,6 +129,12 @@ class EmployeesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
 
+                BulkAction::make('export_excel')
+                        ->label('Export Excel')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn (Collection $records) => \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\EmployeesExport($records), 'employees.xlsx'))
+                        ->deselectRecordsAfterCompletion(),
+                        
                     BulkAction::make('print')
                         ->label('Print Selected')
                         ->icon('heroicon-o-printer')
