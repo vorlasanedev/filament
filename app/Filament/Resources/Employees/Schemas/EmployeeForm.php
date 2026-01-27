@@ -66,6 +66,12 @@ class EmployeeForm
                     ->avatar()
                     ->directory('employee-photos')
                     ->columnSpanFull(),
+                \Filament\Forms\Components\FileUpload::make('gallery')
+                    ->multiple()
+                    ->maxFiles(5)
+                    ->directory('employee-galleries')
+                    ->reorderable()
+                    ->columnSpanFull(),
             ]);
     }
 }

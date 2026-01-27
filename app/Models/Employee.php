@@ -25,6 +25,11 @@ class Employee extends Model
         'salary',
         'user_id',
         'profile_picture',
+        'gallery',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
     ];
 
     public $translatable = [

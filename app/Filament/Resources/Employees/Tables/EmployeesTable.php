@@ -39,6 +39,10 @@ class EmployeesTable
             ->columns([
                 ImageColumn::make('profile_picture')
                     ->circular(),
+                ImageColumn::make('gallery')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3),
                 TextInputColumn::make('first_name')
                     ->label(__('fields.first_name'))
                     ->extraAttributes(['class' => 'py-1'])
