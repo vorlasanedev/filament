@@ -17,4 +17,9 @@ class ListPositions extends ListRecords
                 ->label(__('navigation.create_position')),
         ];
     }
+
+    public function getMaxContentWidth(): ?string
+    {
+        return 'full';
+    }
 }
