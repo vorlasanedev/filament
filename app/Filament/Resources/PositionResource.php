@@ -18,6 +18,11 @@ class PositionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('navigation.employee_management');
+    }
+
     public static function getNavigationLabel(): string
     {
         return __('navigation.positions');
@@ -66,14 +71,12 @@ class PositionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 \Filament\Actions\EditAction::make()
                     ->label(__('actions.edit')),
             ])
-            ->bulkActions([
-                \Filament\Actions\BulkActionGroup::make([
-                    \Filament\Actions\DeleteBulkAction::make(),
-                ]),
+            ->groupedBulkActions([
+                \Filament\Actions\DeleteBulkAction::make(),
             ]);
     }
 
