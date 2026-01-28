@@ -16,10 +16,33 @@ use Filament\Panel;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class User extends Authenticatable implements JWTSubject, FilamentUser
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Support\Facades\Storage;
+
+class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, LogsActivity;
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('public');
+
+        // 1. Check User's direct avatar_url
+        $userAvatar = $this->avatar_url;
+        if ($userAvatar && $disk->exists($userAvatar)) {
+            return $disk->url($userAvatar);
+        }
+
+        // 2. Fallback to Employee's profile_picture
+        $employeeAvatar = $this->employee?->profile_picture;
+        if ($employeeAvatar && $disk->exists($employeeAvatar)) {
+            return $disk->url($employeeAvatar);
+        }
+
+        return null;
+    }
 
     public function employee()
     {
