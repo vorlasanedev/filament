@@ -47,26 +47,34 @@ class ActivitiesRelationManager extends RelationManager
                     ->label('Changes')
                     ->wrap()
                     ->formatStateUsing(function ($state, Activity $record) {
+                        if (! is_array($state) && ! is_object($state)) {
+                            return (string) $state;
+                        }
+
+                        $formatValue = fn ($v) => is_array($v) || is_object($v) ? json_encode($v) : (string) $v;
+
                         if ($record->event === 'updated') {
                             $changes = [];
                             $old = $record->properties['old'] ?? [];
+                            $old = is_array($old) ? $old : [];
+                            
                             foreach ($state as $key => $value) {
+                                $newValue = $formatValue($value);
                                 if (isset($old[$key]) && $old[$key] !== $value) {
-                                  $changes[] = "$key: $old[$key] -> $value";
+                                    $oldValue = $formatValue($old[$key]);
+                                    $changes[] = "{$key}: {$oldValue} -> {$newValue}";
                                 } else {
-                                     $changes[] = "$key: $value";
+                                    $changes[] = "{$key}: {$newValue}";
                                 }
                             }
                             return implode(', ', $changes);
                         }
-                         if (is_array($state)) {
-                             $formatted = [];
-                             foreach ($state as $key => $value) {
-                                 $formatted[] = "$key: $value";
-                             }
-                             return implode(', ', $formatted);
-                         }
-                        return $state;
+                        
+                        $formatted = [];
+                        foreach ($state as $key => $value) {
+                            $formatted[] = "{$key}: " . $formatValue($value);
+                        }
+                        return implode(', ', $formatted);
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
