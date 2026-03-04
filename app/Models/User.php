@@ -19,11 +19,12 @@ use Spatie\Activitylog\LogOptions;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, LogsActivity, SoftDeletes;
+    use HasFactory, Notifiable, LogsActivity, SoftDeletes, HasRoles;
 
     public function getFilamentAvatarUrl(): ?string
     {

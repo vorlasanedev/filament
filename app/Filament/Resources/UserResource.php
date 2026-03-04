@@ -60,6 +60,11 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
                     ->required(fn (string $context): bool => $context === 'create'),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
                 Forms\Components\FileUpload::make('avatar_url')
                     ->avatar()
                     ->directory('avatars'),
@@ -77,6 +82,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -97,6 +105,17 @@ class UserResource extends Resource
                 ForceDeleteAction::make(),
             ])
             ->groupedBulkActions([
+                \Filament\Actions\BulkAction::make('duplicate')
+                    ->label('Duplicate Row')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        foreach ($records as $record) {
+                            $replica = $record->replicate(['email', 'phone']);
+                            $replica->email = 'copy_' . time() . '_' . uniqid() . '@example.com';
+                            $replica->save();
+                        }
+                    })
+                    ->deselectRecordsAfterCompletion(),
                 DeleteBulkAction::make(),
                 RestoreBulkAction::make(),
                 ForceDeleteBulkAction::make(),
