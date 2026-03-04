@@ -49,7 +49,7 @@ class EmployeesTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('last_name')
+                TextInputColumn::make('last_name')
                     ->label(__('fields.last_name'))
                     ->searchable()
                     ->sortable()
@@ -64,6 +64,18 @@ class EmployeesTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('village.name')
+                    ->label('Village')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('district.name')
+                    ->label('District')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('province.name')
+                    ->label('Province')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('position.name')
                     ->label(__('fields.position'))
                     ->searchable()

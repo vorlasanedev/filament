@@ -21,6 +21,9 @@ class Employee extends Model
         'last_name',
         'email',
         'phone',
+        'province_id',
+        'district_id',
+        'village_id',
         'position_id',
         'salary',
         'user_id',
@@ -40,6 +43,21 @@ class Employee extends Model
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function village()
+    {
+        return $this->belongsTo(Village::class);
     }
 
     public function user()

@@ -40,6 +40,68 @@ class EmployeeForm
                     ->validationAttribute('Phone number')
                     ->maxLength(10)
                     ->placeholder('2000000000'),
+                \Filament\Forms\Components\Select::make('province_id')
+                    ->label('Province')
+                    ->relationship('province', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        \Filament\Forms\Components\TextInput::make('name')
+                            ->label('Province Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->live()
+                    ->afterStateUpdated(function (\Filament\Schemas\Components\Utilities\Set $set) {
+                        $set('district_id', null);
+                        $set('village_id', null);
+                    }),
+                \Filament\Forms\Components\Select::make('district_id')
+                    ->label('District')
+                    ->options(fn (\Filament\Schemas\Components\Utilities\Get $get): \Illuminate\Support\Collection => \App\Models\District::query()
+                        ->where('province_id', $get('province_id'))
+                        ->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        \Filament\Forms\Components\TextInput::make('name')
+                            ->label('District Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->createOptionUsing(function (array $data, \Filament\Schemas\Components\Utilities\Get $get) {
+                        if (! $get('province_id')) return null;
+                        
+                        $district = \App\Models\District::create([
+                            'name' => $data['name'],
+                            'province_id' => $get('province_id'),
+                        ]);
+                        return $district->id;
+                    })
+                    ->live()
+                    ->afterStateUpdated(fn (\Filament\Schemas\Components\Utilities\Set $set) => $set('village_id', null)),
+                \Filament\Forms\Components\Select::make('village_id')
+                    ->label('Village')
+                    ->options(fn (\Filament\Schemas\Components\Utilities\Get $get): \Illuminate\Support\Collection => \App\Models\Village::query()
+                        ->where('district_id', $get('district_id'))
+                        ->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        \Filament\Forms\Components\TextInput::make('name')
+                            ->label('Village Name')
+                            ->required()
+                            ->maxLength(255),
+                    ])
+                    ->createOptionUsing(function (array $data, \Filament\Schemas\Components\Utilities\Get $get) {
+                        if (! $get('district_id')) return null;
+
+                        $village = \App\Models\Village::create([
+                            'name' => $data['name'],
+                            'district_id' => $get('district_id'),
+                        ]);
+                        return $village->id;
+                    }),
                 \Filament\Forms\Components\Select::make('position_id')
                     ->label(__('fields.position'))
                     ->relationship('position', 'name')

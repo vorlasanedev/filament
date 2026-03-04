@@ -11,6 +11,9 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            \Filament\Actions\DeleteAction::make(),
+            \Filament\Actions\RestoreAction::make(),
+            \Filament\Actions\ForceDeleteAction::make(),
             \Filament\Actions\Action::make('employee_action')
                 ->label(fn () => $this->record->employee ? '1 Employee' : 'Create Employee')
                 ->color(fn () => $this->record->employee ? 'gray' : 'primary')
