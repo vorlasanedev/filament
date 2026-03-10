@@ -46,7 +46,7 @@ class EmployeeForm
                     ->searchable()
                     ->preload()
                     ->createOptionForm([
-                        \Filament\Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Province Name')
                             ->required()
                             ->maxLength(255),
@@ -64,7 +64,7 @@ class EmployeeForm
                     ->searchable()
                     ->preload()
                     ->createOptionForm([
-                        \Filament\Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('District Name')
                             ->required()
                             ->maxLength(255),
@@ -88,7 +88,7 @@ class EmployeeForm
                     ->searchable()
                     ->preload()
                     ->createOptionForm([
-                        \Filament\Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Village Name')
                             ->required()
                             ->maxLength(255),
