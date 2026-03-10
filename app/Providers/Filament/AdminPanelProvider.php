@@ -67,6 +67,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::BODY_END,
+                fn () => view('filament.hooks.viewer-js'),
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);

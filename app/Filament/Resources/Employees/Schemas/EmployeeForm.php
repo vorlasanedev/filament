@@ -130,8 +130,11 @@ class EmployeeForm
                     ->columnSpanFull(),
                 \Filament\Forms\Components\FileUpload::make('gallery')
                     ->multiple()
+                    ->image()
                     ->maxFiles(5)
                     ->directory('employee-galleries')
+                    ->panelLayout('grid')
+                    ->openable()
                     ->reorderable()
                     ->columnSpanFull(),
             ]);
