@@ -33,7 +33,10 @@ class AdminPanelProvider extends PanelProvider
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
             ->profile()
             ->userMenuItems([
-                'profile' => \Filament\Navigation\MenuItem::make()->label('update password')->url('#'), 
+                'update_password' => \Filament\Actions\Action::make('update_password')
+                    ->label('Update Password')
+                    ->url('#')
+                    ->icon('heroicon-o-key'),
             ])
             ->colors([
                 'primary' => Color::Amber,
