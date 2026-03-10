@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvatar
+class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvatar, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, LogsActivity, SoftDeletes, HasRoles;
@@ -62,6 +62,7 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvata
         'phone',
         'password',
         'avatar_url',
+        'is_active',
     ];
 
     /**
@@ -96,6 +97,15 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvata
         return $this->getKey();
     }
 
+    public function markEmailAsVerified()
+    {
+        $this->is_active = true;
+
+        return $this->forceFill([
+            'email_verified_at' => $this->freshTimestamp(),
+        ])->save();
+    }
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
@@ -108,7 +118,7 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvata
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return (bool) $this->is_active;
     }
 
     public function getActivitylogOptions(): LogOptions

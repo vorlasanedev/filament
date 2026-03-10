@@ -29,8 +29,12 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('15rem')
-->brandLogo(fn () => view('filament.brand'))
-            ->login()
+            ->brandLogo(fn () => view('filament.brand'))
+            ->login(\App\Filament\Pages\Auth\CustomLogin::class)
+            ->profile()
+            ->userMenuItems([
+                'profile' => \Filament\Navigation\MenuItem::make()->label('update password')->url('#'), 
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])

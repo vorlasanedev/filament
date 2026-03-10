@@ -14,7 +14,9 @@ class UserResourceTest extends TestCase
   
     public function test_can_render_user_resource_index_page()
     {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super_admin']);
         $user = User::factory()->create();
+        $user->assignRole($role);
         $this->actingAs($user); // Assuming the user has access. Filament permissions might be required.
         // For basic Filament, any authenticated user might access if unrelated policies are not set.
 
@@ -24,7 +26,9 @@ class UserResourceTest extends TestCase
 
     public function test_can_render_user_resource_create_page()
     {
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super_admin']);
         $user = User::factory()->create();
+        $user->assignRole($role);
         $this->actingAs($user);
 
         $response = $this->get(UserResource::getUrl('create'));

@@ -68,6 +68,8 @@ class UserResource extends Resource
                 Forms\Components\FileUpload::make('avatar_url')
                     ->avatar()
                     ->directory('avatars'),
+                Forms\Components\Toggle::make('is_active')
+                    ->default(false),
             ]);
     }
 
@@ -83,6 +85,8 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->badge()
                     ->searchable(),
