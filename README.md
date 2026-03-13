@@ -130,3 +130,9 @@ To add a new translation:
     ->label(__('fields.new_field'))
     ```
 
+
+
+
+
+Todo:
+update menu employees has employees, departments, reports, Configuration. and move position under configuration

@@ -19,8 +19,12 @@ class PositionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $cluster = EmployeeManagementCluster::class;
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Configuration';
+    }
     public static function getNavigationLabel(): string
     {
         return __('navigation.positions');

@@ -34,7 +34,7 @@ class ProductCategoriesTable
             ->recordActions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->groupedBulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

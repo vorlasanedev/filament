@@ -61,7 +61,7 @@ class ProductsTable
             ->recordActions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->groupedBulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
