@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarWidth('15rem')
             ->brandLogo(fn () => view('filament.brand'))
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
+            ->globalSearch(false)
             ->profile()
             ->userMenuItems([
                 'update_password' => \Filament\Actions\Action::make('update_password')
@@ -43,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('Noto Sans Lao')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\Filament\Clusters')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
@@ -66,6 +68,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                    ->navigationGroup('Roles and Permission')
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use BackedEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Filament\Clusters\UserManagement\UserManagementCluster;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
@@ -24,6 +25,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
+    protected static ?string $cluster = UserManagementCluster::class;
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationLabel(): string
     {

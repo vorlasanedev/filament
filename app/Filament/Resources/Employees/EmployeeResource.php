@@ -8,6 +8,7 @@ use Filament\Tables\Table;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
+use App\Filament\Clusters\EmployeeManagement\EmployeeManagementCluster;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ViewEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
@@ -21,11 +22,8 @@ class EmployeeResource extends Resource
     protected static string|\UnitEnum|null $navigationGroup = null;
     protected static ?string $navigationLabel = null;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('navigation.employee_management');
-    }
+    protected static ?string $cluster = EmployeeManagementCluster::class;
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationLabel(): string
     {
