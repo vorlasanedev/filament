@@ -9,6 +9,7 @@ use App\Filament\Resources\StockMoves\Schemas\StockMoveForm;
 use App\Filament\Resources\StockMoves\Tables\StockMovesTable;
 use App\Models\StockMove;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -18,11 +19,11 @@ class StockMoveResource extends Resource
 {
     protected static ?string $model = StockMove::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bars-3-bottom-left';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bars-3-bottom-left';
 
     protected static ?string $cluster = \App\Filament\Clusters\InventoryManagement\InventoryManagementCluster::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Report';
+    protected static string|UnitEnum|null $navigationGroup = 'Report';
 
     protected static ?int $navigationSort = 4;
 

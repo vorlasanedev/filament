@@ -35,7 +35,12 @@ class RoleResource extends Resource
     use Essentials\BelongsToTenant;
     use Essentials\HasGlobalSearch;
     use Essentials\HasLabels;
-    use Essentials\HasNavigation;
+    use Essentials\HasNavigation {
+        Essentials\HasNavigation::delegateToPlugin insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
+        Essentials\HasNavigation::isNoPluginResult insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
+        Essentials\HasNavigation::pluginUsesTrait insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
+        Essentials\HasNavigation::getParentResult insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
+    }
     use HasShieldFormComponents;
 
     protected static ?string $recordTitleAttribute = 'name';
