@@ -11,13 +11,14 @@ In Filament v3, Clusters are used to group related resources under a single side
 When a Cluster is configured to use top navigation, Filament organizes the resources into tabs based on their **Navigation Group**:
 - Resources with the *same* `$navigationGroup` are grouped together.
 - If a group contains multiple resources, it renders as a single tab that reveals a dropdown when clicked.
-- If a group contains a single resource, it renders as a standard clickable tab.
-- **Important:** Every resource inside a Top Navigation cluster *must* have a explicitly defined `$navigationGroup` to render properly as a tab alongside other grouped resources.
+- If a resource is assigned to a group (even if it's the only one), Filament may still render it as a dropdown inside a Cluster.
+- **Key Insight:** To create a flat, standalone tab without a dropdown, simply *remove or omit* the `$navigationGroup` property from the resource.
 
 ### 3. Default Routing & Sorting
 When a user clicks on the Cluster link in the main sidebar, Filament automatically redirects to the first resource within that cluster.
 - The order of tabs is determined by the `$navigationSort` property on the individual resources.
-- Setting `$navigationSort = 1` on the `UserResource` ensures it appears first, thereby making the "Users List" the default page loaded when the cluster is accessed.
+- **Ungrouped vs Grouped:** Resources without a `$navigationGroup` (flat tabs) naturally sort *before* grouped items.
+- Setting `$navigationSort = 1` on the `UserResource` without a group ensures it appears first, thereby making the "Users" list the default page loaded when the cluster is accessed, and places its tab neatly to the left of grouped tabs like "Configuration".
 
 ### 4. PHP 8.1+ Property Type Strictness
 When overriding properties like `$navigationGroup` in a child Resource class, PHP enforces strict type compatibility. Since Filament's base `Resource` class defines this property as a union type, your resource must match it exactly:

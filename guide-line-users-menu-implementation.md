@@ -34,16 +34,13 @@ The resource you want to load by default when clicking the sidebar must be sorte
 In `app/Filament/Resources/UserResource.php`, define the cluster, sort, and group:
 ```php
 // Link to the cluster
-public static function getCluster(): ?string
-{
-    return \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
-}
+protected static ?string $cluster = \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
 
 // Make it the first tab (and default route)
 protected static ?int $navigationSort = 1;
 
-// Define the name of the tab (MUST match exact PHP type hint)
-protected static \UnitEnum|string|null $navigationGroup = 'Users';
+// DO NOT set a $navigationGroup. 
+// Leaving it ungrouped ensures it becomes a flat tab (no dropdown) and automatically sorts before any grouped tabs.
 ```
 
 ## Step 3: Configure Dropdown Tabs (Roles and Permissions)
