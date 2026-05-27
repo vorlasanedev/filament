@@ -15,8 +15,9 @@ class PermissionResource extends Resource
     protected static ?string $model = Permission::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-key';
-    
-    protected static \UnitEnum|string|null $navigationGroup = 'User Management';
+    protected static ?string $cluster = \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Configuration';
 
     protected static ?int $navigationSort = 3;
 

@@ -70,7 +70,6 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-                    ->navigationGroup('User Management')
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,

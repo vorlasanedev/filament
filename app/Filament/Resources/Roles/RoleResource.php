@@ -160,9 +160,14 @@ class RoleResource extends Resource
         return Utils::getResourceSlug();
     }
 
+    public static function getCluster(): ?string
+    {
+        return \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
+    }
+
     public static function getNavigationGroup(): ?string
     {
-        return 'User Management';
+        return 'Configuration';
     }
 
     public static function getEssentialsPlugin(): ?FilamentShieldPlugin
