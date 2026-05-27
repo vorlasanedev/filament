@@ -47,6 +47,14 @@ class AdminPanelProvider extends PanelProvider
             ->font('Noto Sans Lao')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\Filament\Clusters')
+            ->navigationGroups([
+                'Overview',
+                'Users',
+                'Products',
+                'Operations',
+                'Report',
+                'Configuration',
+            ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
