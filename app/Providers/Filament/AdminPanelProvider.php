@@ -27,10 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('15rem')
             ->brandLogo(fn () => view('filament.brand'))
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
+            ->favicon(asset('favicon.png'))
             ->globalSearch(false)
             ->profile()
             ->userMenuItems([
@@ -68,7 +70,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-                    ->navigationGroup('Roles and Permission')
+                    ->navigationGroup('User Management')
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,

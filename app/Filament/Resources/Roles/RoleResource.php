@@ -43,6 +43,8 @@ class RoleResource extends Resource
     }
     use HasShieldFormComponents;
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -158,9 +160,9 @@ class RoleResource extends Resource
         return Utils::getResourceSlug();
     }
 
-    public static function getCluster(): ?string
+    public static function getNavigationGroup(): ?string
     {
-        return \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
+        return 'User Management';
     }
 
     public static function getEssentialsPlugin(): ?FilamentShieldPlugin
