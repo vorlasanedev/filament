@@ -19,7 +19,13 @@ class StockTransferPolicy
 
     public function view(AuthUser $authUser, StockTransfer $stockTransfer): bool
     {
-        return $authUser->can('View:StockTransfer');
+        if (!$authUser->can('View:StockTransfer')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $stockTransfer->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,17 +35,35 @@ class StockTransferPolicy
 
     public function update(AuthUser $authUser, StockTransfer $stockTransfer): bool
     {
-        return $authUser->can('Update:StockTransfer');
+        if (!$authUser->can('Update:StockTransfer')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $stockTransfer->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function delete(AuthUser $authUser, StockTransfer $stockTransfer): bool
     {
-        return $authUser->can('Delete:StockTransfer');
+        if (!$authUser->can('Delete:StockTransfer')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $stockTransfer->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function restore(AuthUser $authUser, StockTransfer $stockTransfer): bool
     {
-        return $authUser->can('Restore:StockTransfer');
+        if (!$authUser->can('Restore:StockTransfer')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $stockTransfer->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, StockTransfer $stockTransfer): bool

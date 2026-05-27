@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
+    use \App\Models\Traits\HasUserOwnership;
+
     protected $fillable = [
         'name',
         'type',

@@ -19,7 +19,13 @@ class LocationPolicy
 
     public function view(AuthUser $authUser, Location $location): bool
     {
-        return $authUser->can('View:Location');
+        if (!$authUser->can('View:Location')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $location->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,17 +35,35 @@ class LocationPolicy
 
     public function update(AuthUser $authUser, Location $location): bool
     {
-        return $authUser->can('Update:Location');
+        if (!$authUser->can('Update:Location')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $location->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function delete(AuthUser $authUser, Location $location): bool
     {
-        return $authUser->can('Delete:Location');
+        if (!$authUser->can('Delete:Location')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $location->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function restore(AuthUser $authUser, Location $location): bool
     {
-        return $authUser->can('Restore:Location');
+        if (!$authUser->can('Restore:Location')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $location->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, Location $location): bool

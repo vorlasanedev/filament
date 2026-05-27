@@ -19,7 +19,13 @@ class EmployeePolicy
 
     public function view(AuthUser $authUser, Employee $employee): bool
     {
-        return $authUser->can('View:Employee');
+        if (!$authUser->can('View:Employee')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_employee')) {
+            return $employee->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,17 +35,35 @@ class EmployeePolicy
 
     public function update(AuthUser $authUser, Employee $employee): bool
     {
-        return $authUser->can('Update:Employee');
+        if (!$authUser->can('Update:Employee')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_employee')) {
+            return $employee->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function delete(AuthUser $authUser, Employee $employee): bool
     {
-        return $authUser->can('Delete:Employee');
+        if (!$authUser->can('Delete:Employee')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_employee')) {
+            return $employee->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function restore(AuthUser $authUser, Employee $employee): bool
     {
-        return $authUser->can('Restore:Employee');
+        if (!$authUser->can('Restore:Employee')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_employee')) {
+            return $employee->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, Employee $employee): bool

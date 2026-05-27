@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
+    use \App\Models\Traits\HasUserOwnership;
+
     protected $fillable = [
         'name',
         'short_name',

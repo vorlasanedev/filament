@@ -19,7 +19,13 @@ class ProductPolicy
 
     public function view(AuthUser $authUser, Product $product): bool
     {
-        return $authUser->can('View:Product');
+        if (!$authUser->can('View:Product')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $product->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,17 +35,35 @@ class ProductPolicy
 
     public function update(AuthUser $authUser, Product $product): bool
     {
-        return $authUser->can('Update:Product');
+        if (!$authUser->can('Update:Product')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $product->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function delete(AuthUser $authUser, Product $product): bool
     {
-        return $authUser->can('Delete:Product');
+        if (!$authUser->can('Delete:Product')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $product->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function restore(AuthUser $authUser, Product $product): bool
     {
-        return $authUser->can('Restore:Product');
+        if (!$authUser->can('Restore:Product')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $product->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, Product $product): bool

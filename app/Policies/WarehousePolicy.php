@@ -19,7 +19,13 @@ class WarehousePolicy
 
     public function view(AuthUser $authUser, Warehouse $warehouse): bool
     {
-        return $authUser->can('View:Warehouse');
+        if (!$authUser->can('View:Warehouse')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $warehouse->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,17 +35,35 @@ class WarehousePolicy
 
     public function update(AuthUser $authUser, Warehouse $warehouse): bool
     {
-        return $authUser->can('Update:Warehouse');
+        if (!$authUser->can('Update:Warehouse')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $warehouse->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function delete(AuthUser $authUser, Warehouse $warehouse): bool
     {
-        return $authUser->can('Delete:Warehouse');
+        if (!$authUser->can('Delete:Warehouse')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $warehouse->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function restore(AuthUser $authUser, Warehouse $warehouse): bool
     {
-        return $authUser->can('Restore:Warehouse');
+        if (!$authUser->can('Restore:Warehouse')) {
+            return false;
+        }
+        if ($authUser->hasRole('user_inventory')) {
+            return $warehouse->user_id === $authUser->id;
+        }
+        return true;
     }
 
     public function forceDelete(AuthUser $authUser, Warehouse $warehouse): bool
