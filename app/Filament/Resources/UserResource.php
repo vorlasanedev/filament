@@ -26,7 +26,7 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationGroup = 'Users';
+    protected static \UnitEnum|string|null $navigationGroup = 'Users';
 
     public static function getCluster(): ?string
     {
