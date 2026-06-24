@@ -1,57 +1,97 @@
-﻿---
+---
 name: export-users
-description: Instructions on how to add Bulk Export functionality to a Filament Resource (like UserResource).
+description: Zero-to-Hero instructions on how to add Bulk Export functionality to a Filament Resource.
 ---
 
-# Skill: Exporting Records in Filament
+# Skill: Exporting Records in Filament (Zero to Hero)
 
-This skill outlines how to implement native bulk exporting in Filament v3.
+This comprehensive guide details how to implement native, background-processed bulk exporting in Filament v3 from scratch.
 
-## Step 1: Generate the Exporter
-To export records, you first need to generate an Exporter class for your model. Run the following command:
+## Phase 1: Generate the Exporter
 
-``bash
-php artisan make:filament-exporter User
-``
-This will create "app/Filament/Exports/UserExporter.php".
+Filament handles exports using an `Exporter` class.
 
-## Step 2: Configure the Exporter Columns
-Open the generated Exporter class and define which columns should be exported.
-``php
+1. Generate the Exporter using Artisan:
+   ```bash
+   php artisan make:filament-exporter User
+   ```
+2. This creates `app/Filament/Exports/UserExporter.php`. Open this file to define what columns get exported.
+
+## Phase 2: Configure the Exporter Columns
+
+In the `UserExporter.php` file, map the database fields to CSV columns.
+
+```php
+namespace App\Filament\Exports;
+
+use App\Models\User;
 use Filament\Actions\Exports\ExportColumn;
+use Filament\Actions\Exports\Exporter;
+use Filament\Actions\Exports\Models\Export;
 
-public static function getColumns(): array
+class UserExporter extends Exporter
 {
-    return [
-        ExportColumn::make('id')->label('ID'),
-        ExportColumn::make('name'),
-        ExportColumn::make('email'),
-        ExportColumn::make('created_at'),
-    ];
+    protected static ?string $model = User::class;
+
+    public static function getColumns(): array
+    {
+        return [
+            ExportColumn::make('id')->label('ID'),
+            ExportColumn::make('name'),
+            ExportColumn::make('email'),
+            ExportColumn::make('created_at')->label('Joined At')->date(),
+        ];
+    }
+
+    public static function getCompletedNotificationBody(Export $export): string
+    {
+        $body = 'Your user export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        if ($failedRowsCount = $export->getFailedRowsCount()) {
+            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+        }
+        return $body;
+    }
 }
-``
+```
 
-## Step 3: Add the Export Bulk Action to the Resource
-Go to your Resource (e.g., "UserResource.php"), and in the 	able() method's ulkActions(), add the ExportBulkAction.
+## Phase 3: Wiring it into Filament
 
-**Important Note regarding Filament Namespaces:**
-Ensure you import the correct namespace for ExportBulkAction. Depending on your exact Filament build, it might be located in Filament\Actions\ExportBulkAction instead of Filament\Tables\Actions\ExportBulkAction.
+Now, add the Bulk Action to your Resource table (e.g., `UserResource.php`).
 
-``php
-use Filament\Actions\ExportBulkAction;
+```php
+use Filament\Actions\ExportBulkAction; // Import the Action!
 use App\Filament\Exports\UserExporter;
 
-// Inside the table() method:
-->bulkActions([
-    Tables\Actions\BulkActionGroup::make([
-        // ... other actions like DeleteBulkAction
-        ExportBulkAction::make()
-            ->exporter(UserExporter::class),
-    ]),
-])
-``
+public static function table(Table $table): Table
+{
+    return $table
+        // ... columns and filters ...
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+                
+                // Add the Export action here
+                ExportBulkAction::make()
+                    ->exporter(UserExporter::class),
+            ]),
+        ]);
+}
+```
 
-## Step 4: Ensure Queues are Configured
-Native exports use jobs in the background! If you do not have a queue worker running, the export will not finish and the user will never get the "Download" link.
+## Phase 4: The Critical Step (Queues)
 
-Refer to the "how-to-run-queue-work" skill for details. If testing locally, either run php artisan queue:work or set QUEUE_CONNECTION=sync in your .env.
+**IMPORTANT:** Filament exports run as background jobs by default to prevent timeouts on large tables. If a worker is not running, the export will *start* but the user will never receive the download notification.
+
+Ensure your `.env` is configured properly.
+
+**For Local Development (No Worker Needed):**
+```env
+QUEUE_CONNECTION=sync
+```
+*(With `sync`, the export runs immediately in the browser request. Only use this for small tables or local testing).*
+
+**For Production (Worker Required):**
+```env
+QUEUE_CONNECTION=database
+```
+*(Run `php artisan queue:work` to process the jobs in the background).*

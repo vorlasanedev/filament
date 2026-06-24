@@ -12,7 +12,7 @@
             padding: 0;
         }
         .header {
-            background-color: #fca311; /* Orange color */
+            background-color: #1a6fb0; /* Blue color */
             color: white;
             padding: 30px;
             width: 100%;
@@ -21,18 +21,13 @@
             width: 100%;
             border-collapse: collapse;
         }
-        .logo-circle {
-            background-color: white;
-            color: #111;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            text-align: center;
+        .header-title-left {
+            font-size: 20px;
             font-weight: bold;
-            font-size: 36px;
-            line-height: 80px;
+            text-transform: uppercase;
+            line-height: 1.3;
         }
-        .header-title {
+        .header-title-right {
             font-size: 28px;
             font-weight: bold;
             text-transform: uppercase;
@@ -41,66 +36,58 @@
         }
         .contact-info {
             text-align: right;
-            font-size: 11px;
+            font-size: 9px;
+            color: #d1e3f8;
         }
         .content {
-            padding: 30px;
+            padding: 30px 40px;
         }
         .section-title {
-            background-color: #fca311;
-            color: white;
+            color: #1a6fb0;
             font-weight: bold;
-            padding: 8px 15px;
-            margin-bottom: 15px;
-            font-size: 14px;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 5px;
         }
         .field-table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
+            border-collapse: separate;
+            border-spacing: 0 10px;
         }
-        .field-table td {
-            padding: 8px 0;
-            vertical-align: middle;
-        }
-        .label-col {
-            width: 35%;
+        .field-label {
             font-size: 12px;
-        }
-        .colon-col {
-            width: 5%;
-        }
-        .input-col {
-            width: 60%;
+            margin-bottom: 4px;
+            color: #333;
         }
         .input-box {
-            background-color: #e2e8f0;
-            border: 1px solid #fca311;
-            height: 22px;
+            background-color: #dfe6f2; /* Light blue background */
+            border: 1px solid #aebfd6; /* Light blue border */
+            height: 24px;
             padding: 0 8px;
-            line-height: 22px;
+            line-height: 24px;
             color: #111;
-        }
-        .main-columns {
             width: 100%;
-            border-collapse: collapse;
+            box-sizing: border-box;
         }
-        .main-columns > tbody > tr > td {
-            vertical-align: top;
-            width: 48%;
-        }
-        .col-spacer {
-            width: 4%;
+        .input-box-large {
+            background-color: #dfe6f2;
+            border: 1px solid #aebfd6;
+            height: 100px;
+            padding: 8px;
+            color: #111;
+            width: 100%;
+            box-sizing: border-box;
         }
         .checkbox-group {
             font-size: 12px;
+            margin-top: 5px;
         }
         .checkbox {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 1px solid #fca311;
-            background-color: #e2e8f0;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #aebfd6;
+            background-color: #dfe6f2;
             margin-right: 5px;
             vertical-align: middle;
         }
@@ -108,31 +95,16 @@
             margin-right: 15px;
             vertical-align: middle;
         }
-        .lorem-text {
-            font-size: 10px;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        .disposition-section {
-            background-color: #fca311;
-            color: white;
-            font-weight: bold;
-            padding: 8px 15px;
-            font-size: 14px;
-        }
-        .disposition-label {
-            float: left;
-        }
-        .disposition-note {
-            float: right;
-            font-weight: normal;
-            font-size: 11px;
-            padding-top: 2px;
-        }
-        .clear {
-            clear: both;
-        }
+        
+        /* Layout utility classes */
+        .w-100 { width: 100%; }
+        .w-60 { width: 60%; }
+        .w-50 { width: 50%; }
+        .w-40 { width: 40%; }
+        .w-33 { width: 33.33%; }
+        .pr-10 { padding-right: 10px; }
+        .pl-10 { padding-left: 10px; }
+        
     </style>
 </head>
 <body>
@@ -141,11 +113,11 @@
 <div class="header">
     <table>
         <tr>
-            <td width="20%">
-                <div class="logo-circle">1K</div>
+            <td width="50%" valign="top">
+                <div class="header-title-left">INFORMATION GATHERING<br>FORM</div>
             </td>
-            <td width="80%" valign="top">
-                <div class="header-title">Fillable PDF Form</div>
+            <td width="50%" valign="top">
+                <div class="header-title-right">ABC COMPANY</div>
                 <div class="contact-info">
                     <table width="100%">
                         <tr>
@@ -154,8 +126,8 @@
                                 Phone: (123) 456-7890
                             </td>
                             <td align="right" width="50%">
-                                123 Main Street Avenue<br>
-                                456, New York, NY 10030
+                                100 South Ellsworth Avenue Suite<br>
+                                504, San Mateo, California 94401
                             </td>
                         </tr>
                     </table>
@@ -166,150 +138,124 @@
 </div>
 
 <div class="content">
-    <table class="main-columns">
+
+    <!-- Personal Information -->
+    <div class="section-title">Personal Information</div>
+    <table class="w-100" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
         <tr>
-            <!-- LEFT COLUMN -->
-            <td>
-                <div class="section-title">Your Details</div>
-                
-                <table class="field-table">
-                    <tr>
-                        <td class="label-col">Given Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box">{{ explode(' ', $user->name)[0] ?? '' }}</div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Family Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box">{{ count(explode(' ', $user->name)) > 1 ? explode(' ', $user->name, 2)[1] : '' }}</div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Full Address</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Relationship<br>to the deceased</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Email</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box">{{ $user->email }}</div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Signature</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                </table>
-
-                <div class="section-title">Licensed Funeral Director</div>
-
-                <table class="field-table">
-                    <tr>
-                        <td class="label-col">Full Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Full Address</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">License N</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                </table>
+            <td class="w-60 pr-10" valign="top">
+                <div class="field-label">First Name:</div>
+                <div class="input-box">{{ explode(' ', $user->name)[0] ?? '' }}</div>
             </td>
-
-            <td class="col-spacer"></td>
-
-            <!-- RIGHT COLUMN -->
-            <td>
-                <div class="section-title">Details of The Deceased</div>
-
-                <table class="field-table">
-                    <tr>
-                        <td class="label-col">Given Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Middle Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Family Name</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col"><div class="input-box"></div></td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Gender</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col">
-                            <div class="checkbox-group">
-                                <span class="checkbox"></span> <span class="checkbox-label">Male</span>
-                                <span class="checkbox"></span> <span class="checkbox-label">Female</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label-col">Date of birth</td>
-                        <td class="colon-col">:</td>
-                        <td class="input-col">
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            &nbsp;&nbsp;
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            &nbsp;&nbsp;
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                            <span class="checkbox" style="width: 15px; height: 15px;"></span>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="lorem-text">
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea
+            <td class="w-40 pl-10" valign="top">
+                <div class="field-label">Date of Birth:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="10"></td></tr>
+        <tr>
+            <td class="w-60 pr-10" valign="top">
+                <div class="field-label">Middle Name:</div>
+                <div class="input-box"></div>
+            </td>
+            <td class="w-40 pl-10" valign="top">
+                <div class="field-label">Social Security Number:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="10"></td></tr>
+        <tr>
+            <td class="w-60 pr-10" valign="top">
+                <div class="field-label">Last Name:</div>
+                <div class="input-box">{{ count(explode(' ', $user->name)) > 1 ? explode(' ', $user->name, 2)[1] : '' }}</div>
+            </td>
+            <td class="w-40 pl-10" valign="top">
+                <div class="field-label">Marital Status:</div>
+                <div class="checkbox-group">
+                    <span class="checkbox"></span> <span class="checkbox-label">Married</span>
+                    <span class="checkbox"></span> <span class="checkbox-label">Single</span>
                 </div>
-
-                <table class="field-table" style="margin-bottom: 0;">
-                    <tr>
-                        <td style="width: 50%;">Driver License?</td>
-                        <td style="width: 50%;">
-                            <span class="checkbox"></span> Yes &nbsp;&nbsp; <span class="checkbox"></span> No
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Learner Permit?</td>
-                        <td>
-                            <span class="checkbox"></span> Yes &nbsp;&nbsp; <span class="checkbox"></span> No
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Non-driver ID Card?</td>
-                        <td>
-                            <span class="checkbox"></span> Yes &nbsp;&nbsp; <span class="checkbox"></span> No
-                        </td>
-                    </tr>
-                </table>
             </td>
         </tr>
     </table>
 
-    <div class="disposition-section">
-        <div class="disposition-label">Authorized Disposition(S)</div>
-        <div class="disposition-note">(Check any that apply)</div>
-        <div class="clear"></div>
-    </div>
+    <!-- Contact Information -->
+    <div class="section-title">Contact Information</div>
+    <table class="w-100" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
+        <tr>
+            <td colspan="3" valign="top">
+                <div class="field-label">Email Address:</div>
+                <div class="input-box">{{ $user->email }}</div>
+            </td>
+        </tr>
+        <tr><td colspan="3" height="10"></td></tr>
+        <tr>
+            <td class="w-33 pr-10" valign="top">
+                <div class="field-label">Mobile Phone Number:</div>
+                <div class="input-box"></div>
+            </td>
+            <td class="w-33 pr-10 pl-10" valign="top">
+                <div class="field-label">Home Phone Number:</div>
+                <div class="input-box"></div>
+            </td>
+            <td class="w-33 pl-10" valign="top">
+                <div class="field-label">Work Phone Number:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Employer Information -->
+    <div class="section-title">Employer Information</div>
+    <table class="w-100" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
+        <tr>
+            <td class="w-50 pr-10" valign="top">
+                <div class="field-label">Employer Name:</div>
+                <div class="input-box"></div>
+            </td>
+            <td class="w-50 pl-10" valign="top">
+                <div class="field-label">Industry:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="10"></td></tr>
+        <tr>
+            <td colspan="2" valign="top">
+                <div class="field-label">Employer Address:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="10"></td></tr>
+        <tr>
+            <td class="w-50 pr-10" valign="top">
+                <div class="field-label">Occupation:</div>
+                <div class="input-box"></div>
+            </td>
+            <td class="w-50 pl-10" valign="top">
+                <div class="field-label">Annual Income:</div>
+                <div class="input-box"></div>
+            </td>
+        </tr>
+        <tr><td colspan="2" height="10"></td></tr>
+        <tr>
+            <td colspan="2" valign="top">
+                <div class="field-label" style="margin-bottom: 8px;">Investment History:</div>
+                <div class="checkbox-group">
+                    <span class="checkbox"></span> <span class="checkbox-label">1-4 Years</span>
+                    <span class="checkbox"></span> <span class="checkbox-label">5-8 Years</span>
+                    <span class="checkbox"></span> <span class="checkbox-label">9-12 Years</span>
+                    <span class="checkbox"></span> <span class="checkbox-label">13-18 Years</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Notes -->
+    <div class="section-title">Notes:</div>
+    <div class="input-box-large"></div>
+
 </div>
+
 @if(!$loop->last)
 <div style="page-break-after: always;"></div>
 @endif

@@ -1,47 +1,89 @@
 ---
 name: web-guard-management
-description: Workflow and instructions for managing and setting up custom auth guards (like web guards) in Laravel and Filament.
+description: Zero-to-Hero instructions on setting up custom Auth Guards for frontend and backend separation.
 ---
 
-# Web Guard Management Workflow in Filament
+# Skill: Web Guard Management (Zero to Hero)
 
-This skill outlines the workflow and relationship between files when you need to manage, create, or customize Authentication Guards (like the default `web` guard) for Filament Panels. 
+By default, Laravel uses a single auth guard (`web`). If you are building a system where "Admins" log into Filament, but "Customers" log into a custom React/Vue frontend (or a separate Blade frontend), you usually want to separate them using multiple Guards.
 
-By following this workflow, you can set up different guards for different types of users (e.g., `admin`, `customer`, `employee`) and assign them to specific Filament panels.
+## Phase 1: Define the Guards
 
-## 1. Define the Guard & Provider (`config/auth.php`)
-This is the central configuration file for authentication in Laravel. Here you define **Guards** (how users are authenticated, e.g., via session) and **Providers** (where the users are retrieved from, e.g., Eloquent model).
+Open `config/auth.php`. You will define separate guards and providers for Admins and Customers.
 
-- **File:** `config/auth.php`
-- **What to do:**
-  - Add your new guard under the `'guards'` array (e.g., `'admin' => ['driver' => 'session', 'provider' => 'admins']`).
-  - Add the corresponding provider under the `'providers'` array pointing to your Eloquent model (e.g., `'admins' => ['driver' => 'eloquent', 'model' => App\Models\Admin::class]`).
+```php
+'guards' => [
+    'web' => [ // Used for standard frontend users
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+    'admin' => [ // Used for Filament!
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
+],
 
-## 2. Prepare the Model (`app/Models/YourModel.php`)
-The Eloquent model that represents your user needs to be capable of authentication and must authorize access to the Filament panel.
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class, // Normal users
+    ],
+    'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class, // Admin model
+    ],
+],
+```
 
-- **File:** `app/Models/User.php` or your custom model like `app/Models/Admin.php`
-- **What to do:**
-  - Ensure the model extends `Illuminate\Foundation\Auth\User as Authenticatable`.
-  - Implement the `Filament\Models\Contracts\FilamentUser` interface.
-  - Add the `canAccessPanel(Panel $panel): bool` method to define the logic for who is allowed to log in to the panel.
+## Phase 2: Configure Filament to use the Guard
 
-## 3. Configure the Filament Panel (`app/Providers/Filament/YourPanelProvider.php`)
-Each Filament panel has a Provider file where you register its configuration, including which guard it should use.
+You must tell Filament to stop using the default `web` guard and use the new `admin` guard.
 
-- **File:** `app/Providers/Filament/AdminPanelProvider.php` (or whichever panel you are modifying)
-- **What to do:**
-  - Add the `->authGuard('your_guard_name')` method inside the `panel(Panel $panel)` configuration chain. By default, Filament uses the `web` guard.
-  - Make sure `->login()` is enabled if you want Filament to handle the login page for this guard.
+Open `app/Providers/Filament/AdminPanelProvider.php`.
 
-## 4. Middleware Configuration (Optional)
-If you have custom logic for redirecting unauthenticated users or users who are already logged in, you might need to adjust middleware.
+Add the `->authGuard()` method to the chain:
 
-- **Files:** `app/Http/Middleware/Authenticate.php` or `bootstrap/app.php` (depending on your Laravel version, Laravel 11 uses `bootstrap/app.php`).
-- **What to do:** Adjust redirection logic based on the guard. For instance, if an admin tries to access a protected route while unauthenticated, redirect them to the admin login page instead of the default user login.
+```php
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->default()
+        ->id('admin')
+        ->path('admin')
+        ->authGuard('admin') // Tell Filament to use the admin guard!
+        ->login()
+        // ...
+}
+```
 
-## Summary Checklist to Do It Yourself:
-1. [ ] Edit `config/auth.php` to define the new guard and provider.
-2. [ ] Create or update your Model to extend `Authenticatable` and implement `FilamentUser`.
-3. [ ] Edit your Panel Provider (e.g., `AdminPanelProvider.php`) and add `->authGuard('your_guard')`.
-4. [ ] Clear your config cache: `php artisan config:clear`.
+## Phase 3: The Authentication Model
+
+If you created a new `Admin` model for this guard (as shown in Phase 1), ensure the model extends `Authenticatable` and implements `FilamentUser` so they are allowed to log into the panel.
+
+```php
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
+class Admin extends Authenticatable implements FilamentUser
+{
+    // ...
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true; // Or add strict logic here based on roles
+    }
+}
+```
+
+## Phase 4: Using Auth in Code
+
+Once guards are separated, you must be careful when calling `auth()->user()`.
+
+- **In the Frontend:** `auth()->user()` or `auth('web')->user()` retrieves the Customer.
+- **In Filament:** `auth('admin')->user()` retrieves the Admin user. Filament handles this automatically inside its own components, but if you write custom logic, you must specify the guard!
+
+### Pro-Tips
+- **Do I *need* multiple guards?** If your Admins and Customers share the same database table (`users`) and just have different *Roles* (e.g., via Spatie Permissions), you DO NOT need multiple guards! Just use the `FilamentUser` interface's `canAccessPanel()` method to reject customers. Only use multiple guards if they are entirely different models/tables!

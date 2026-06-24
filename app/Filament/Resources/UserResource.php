@@ -130,7 +130,7 @@ class UserResource extends Resource
                     ->color('warning')
                     ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
                         return response()->streamDownload(function () use ($records) {
-                            echo \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.user-export', ['users' => $records])->output();
+                            echo \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.user-export', ['users' => $records])->setPaper('a4', 'portrait')->output();
                         }, 'user-forms-export.pdf');
                     })
                     ->deselectRecordsAfterCompletion(),

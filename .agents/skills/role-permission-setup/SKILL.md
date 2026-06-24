@@ -1,62 +1,85 @@
 ---
 name: role-permission-setup
-description: Roles and Permissions implementation
+description: Zero-to-Hero instructions on implementing Roles and Permissions using Spatie and Filament Shield.
 ---
-# Skill Implementation: Roles & Permissions
 
-This document outlines the implementation details for the Roles and Permissions system within this Filament project.
+# Skill: Roles and Permissions Setup (Zero to Hero)
 
-## 1. Overview
-The project uses the `bezhan-salleh/filament-shield` package to manage roles and permissions via the underlying `spatie/laravel-permission` library. The UI is structured so that **Users**, **Roles**, and **Permissions** are all neatly grouped together in the sidebar under the **User Management** navigation group.
+Managing who can see or do what in your admin panel is critical. We use `spatie/laravel-permission` under the hood, and `bezhansalleh/filament-shield` to provide the beautiful Filament UI for managing them.
 
-## 2. Navigation Structure
-To provide a clean UX, the Filament Cluster feature was bypassed in favor of a standard Navigation Group. The resources are sorted as follows:
+## Phase 1: Installation & Setup
 
-1. **Users** (`navigationSort = 1`)
-2. **Roles** (`navigationSort = 2`)
-3. **Permissions** (`navigationSort = 3`)
+1. **Install Spatie Permissions:**
+   ```bash
+   composer require spatie/laravel-permission
+   php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+   php artisan migrate
+   ```
 
-All of these share the following property in their respective Resource classes:
+2. **Install Filament Shield:**
+   ```bash
+   composer require bezhansalleh/filament-shield
+   php artisan shield:install
+   ```
+   *Follow the interactive prompts to setup the Super Admin role and generate initial permissions.*
+
+## Phase 2: Wiring the User Model
+
+Your User model needs to be aware of its roles.
+
+Open `app/Models/User.php`.
+Add the `HasRoles` trait from Spatie, and optionally implement Filament's `HasShieldPermissions` if you want strict panel access.
+
 ```php
-protected static \UnitEnum|string|null $navigationGroup = 'User Management';
+namespace App\Models;
+
+use Spatie\Permission\Traits\HasRoles; // IMPORT
+use Filament\Models\Contracts\FilamentUser;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield; // Optional strict access
+
+class User extends Authenticatable implements FilamentUser
+{
+    use HasRoles; // ADD TRAIT
+    // use HasPanelShield; // Uncomment if enforcing panel access strictly
+    
+    // ...
+}
 ```
 
-## 3. Resources
+## Phase 3: Enforcing Permissions
 
-### UserResource
-- **Path:** `app/Filament/Resources/UserResource.php`
-- **Model:** `App\Models\User`
-- **Features:** Allows creating and managing users. Uses a `Select` component to attach Spatie Roles to the user (`->relationship('roles', 'name')`).
+Once installed, Filament Shield *automatically* protects your Resources based on their generated permissions (e.g., `view_user`, `create_user`, etc.).
 
-### RoleResource
-- **Path:** `app/Filament/Resources/Roles/RoleResource.php`
-- **Features:** Provided by Filament Shield. Customized by modifying `getNavigationGroup()` to place it in "User Management" instead of "Roles and Permission".
+If you need to manually enforce permissions in a custom Page, Widget, or Action:
 
-### PermissionResource
-- **Path:** `app/Filament/Resources/PermissionResource.php`
-- **Model:** `Spatie\Permission\Models\Permission`
-- **Features:** A custom-built resource that allows viewing and creating fine-grained permissions. Uses `Filament\Schemas\Schema` for the form configuration.
-
-## 4. Admin Panel Provider Configuration
-In `app/Providers/Filament/AdminPanelProvider.php`, the Filament Shield plugin is configured to use the correct navigation group to match our custom resources:
+### On Custom Actions
 ```php
-->plugins([
-    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-        ->navigationGroup('User Management')
-])
+Tables\Actions\Action::make('sensitive_action')
+    ->visible(fn () => auth()->user()->can('execute_sensitive_action'));
 ```
 
-## 5. Generating Permissions
-When a new Resource, Page, or Widget is created in Filament, you must generate the corresponding permissions so they can be assigned to Roles. 
-Run the following Artisan command:
+### On Custom Pages
+```php
+use Illuminate\Support\Facades\Gate;
+
+public function mount(): void
+{
+    Gate::authorize('view_custom_page');
+    // OR
+    abort_unless(auth()->user()->can('view_custom_page'), 403);
+}
+```
+
+## Phase 4: Regenerating Permissions
+
+As your application grows and you add new Resources or Pages, Shield needs to be told to generate permissions for them.
+
+Run this command whenever you create a new Resource:
 ```bash
 php artisan shield:generate --all
 ```
-*To generate permissions for a specific resource (e.g., PermissionResource), run:*
-```bash
-php artisan shield:generate --resource=PermissionResource
-```
+This scans your codebase and creates all the `view`, `view_any`, `create`, `update`, `delete` permissions automatically in the database!
 
-## 6. Super Admin Access
-The `Super Admin` role bypasses all permission checks via Laravel's `Gate::before` intercept, which is automatically handled by the Shield package. Ensure that your initial user has the `Super Admin` role assigned to manage the system fully.
-
+### Pro-Tips
+- **Super Admin Bypass:** The Super Admin role (created during setup) automatically bypasses all permission checks. Always assign yourself this role via Tinker or DB seeder!
+- **Shield Configuration:** You can customize what permissions are automatically generated by editing `config/filament-shield.php`.

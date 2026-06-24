@@ -1,63 +1,81 @@
-﻿---
+---
 name: how-to-run-queue-work
-description: Instructions on how to manage and run Laravel queue workers for background jobs (like Filament exports).
+description: Zero-to-Hero instructions on managing Laravel queue workers for background jobs (like Filament exports).
 ---
 
-# Skill: How to Run Queue Workers
+# Skill: Managing Queue Workers (Zero to Hero)
 
-This skill explains how to manage Laravel queues, which is essential for processing background jobs like Filament Bulk Exports, sending emails, and other deferred tasks.
+Many background tasks (like bulk exports, sending emails, processing large CSVs) require a queue worker to function properly. Without a worker, jobs sit in the database forever and never execute.
 
-## Why Do We Need a Queue Worker?
-By default, long-running tasks in Laravel and Filament (like exporting thousands of rows to CSV) are pushed to a background queue. If the queue worker isn't running, the job just sits in the database and the task never finishes (e.g., users will never receive the "Export completed" notification with the download link).
+## Phase 1: Understanding the Connection
 
-## Local Development vs. Production
+Laravel checks the `QUEUE_CONNECTION` variable in your `.env` file to know how to handle background tasks.
 
-### 1. Local Development (Instant Processing)
-For local development, it is often easier to process jobs instantly instead of running a separate queue worker terminal.
-
-**To do this, update your .env file:**
-`env
+**Synchronous (Local Testing):**
+```env
 QUEUE_CONNECTION=sync
-`
-*Note: With sync, jobs execute immediately in the same request. You don't need to run any artisan queue commands.*
+```
+If set to `sync`, jobs run immediately inside the browser request. This is great for local testing without needing a worker, but terrible for production because it freezes the user's browser until the job finishes.
 
-### 2. Local Development (Simulating Production)
-If you need to test actual queued jobs (to see how background processing feels):
-
-1. Set your .env:
-`env
+**Asynchronous (Production & Database):**
+```env
 QUEUE_CONNECTION=database
-`
-2. Open a dedicated terminal window and run:
-`ash
-php artisan queue:work
-`
-*(Leave this terminal running in the background).*
+```
+Jobs are pushed to the `jobs` database table. A background worker must be running to process them.
 
-### 3. Production Deployment
-In production, sync should **never** be used. You should use database or edis.
-You must run the queue worker persistently using a process monitor like **Supervisor** (or Laravel Forge/Vapor).
+## Phase 2: Running the Worker Locally
 
-**Example Supervisor configuration (/etc/supervisor/conf.d/laravel-worker.conf):**
-`ini
-[program:laravel-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php /path-to-your-project/artisan queue:work --sleep=3 --tries=3 --max-time=3600
-autostart=true
-autorestart=true
-stopasgroup=true
-killasgroup=true
-user=forge
-numprocs=8
-redirect_stderr=true
-stdout_logfile=/path-to-your-project/storage/logs/worker.log
-stopwaitsecs=3600
-`
+If your connection is `database`, you must manually start a worker in your terminal.
 
-## Useful Queue Commands
-- php artisan queue:work - Starts the queue worker and keeps running.
-- php artisan queue:work --once - Processes exactly one job and then stops.
-- php artisan queue:work --stop-when-empty - Processes all pending jobs and then stops.
-- php artisan queue:clear - Deletes all jobs from the default queue.
-- php artisan queue:retry all - Retries all failed jobs.
-- php artisan queue:failed - Lists all failed jobs.
+1. **Start the Worker:**
+   ```bash
+   php artisan queue:work
+   ```
+   This command keeps running and listens for new jobs. Leave this terminal window open!
+
+2. **Debugging Jobs (Run Once):**
+   If you want to just process the current jobs in the queue and then exit automatically (great for debugging):
+   ```bash
+   php artisan queue:work --once
+   ```
+
+3. **Clearing Failed Jobs:**
+   If a job crashes, it goes to the `failed_jobs` table.
+   ```bash
+   php artisan queue:retry all
+   # OR
+   php artisan queue:flush
+   ```
+
+## Phase 3: Setup for Production (Supervisor)
+
+In a live production environment, you cannot just run `php artisan queue:work` and close your terminal, because the worker will stop. You must configure a process monitor like **Supervisor** (on Linux).
+
+1. Install supervisor on your server (e.g., Ubuntu):
+   ```bash
+   sudo apt-get install supervisor
+   ```
+2. Create a config file at `/etc/supervisor/conf.d/laravel-worker.conf`:
+   ```ini
+   [program:laravel-worker]
+   process_name=%(program_name)s_%(process_num)02d
+   command=php /path/to/your/app/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
+   autostart=true
+   autorestart=true
+   stopasgroup=true
+   killasgroup=true
+   user=www-data
+   numprocs=1
+   redirect_stderr=true
+   stdout_logfile=/path/to/your/app/worker.log
+   ```
+3. Start the process:
+   ```bash
+   sudo supervisorctl reread
+   sudo supervisorctl update
+   sudo supervisorctl start laravel-worker:*
+   ```
+
+### Pro-Tips
+- **Code Changes:** If you change your PHP code, the running queue worker *will not* pick up the changes. You must restart it: `php artisan queue:restart`.
+- **Tries & Timeouts:** Always specify `--tries=3` and `--timeout=90` to prevent jobs from hanging forever or crashing infinitely.

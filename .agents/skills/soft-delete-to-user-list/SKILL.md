@@ -1,42 +1,102 @@
 ---
 name: soft-delete-to-user-list
-description: Instructions on how to add Soft Deletes (TrashedFilter, Restore, ForceDelete) to a Filament Resource table.
+description: Zero-to-Hero instructions on implementing Soft Deletes in Filament.
 ---
 
-# Add Soft Deletes to a Filament Resource
+# Skill: Implementing Soft Deletes (Zero to Hero)
 
-When the user asks to add Soft Deletes functionality to a Filament Resource (like the User list or any other table), follow these steps:
+Soft Deletes allow you to "delete" records in the database without actually wiping the data (they just get a `deleted_at` timestamp). This guide shows how to fully implement this in a Filament Resource.
 
-1. **Verify the Model**:
-   - Check the Eloquent model (e.g., `app/Models/User.php`) using the `view_file` tool to ensure it uses the `Illuminate\Database\Eloquent\SoftDeletes` trait.
-   - If it doesn't, add `use SoftDeletes;` inside the model class and import the trait.
+## Phase 1: Database & Model Preparation
 
-2. **Update the Resource Table Filters**:
-   - Open the corresponding Filament Resource (e.g., `app/Filament/Resources/UserResource.php`).
-   - In the `table(Table $table)` method, add the `TrashedFilter` to the `filters([])` array:
-     ```php
-     Tables\Filters\TrashedFilter::make(),
-     ```
+Before Filament can manage soft deletes, the model and database table must support them.
 
-3. **Update Record Actions**:
-   - In the `recordActions([])` array of the table, ensure the following actions are present:
-     ```php
-     Tables\Actions\EditAction::make(),
-     Tables\Actions\DeleteAction::make(),
-     Tables\Actions\RestoreAction::make(),
-     Tables\Actions\ForceDeleteAction::make(),
-     ```
+1. **Add to Database Migration:**
+   Ensure your table has the `deleted_at` column.
+   ```php
+   public function up(): void
+   {
+       Schema::table('users', function (Blueprint $table) {
+           $table->softDeletes(); // Adds the deleted_at column
+       });
+   }
+   ```
+   *Run `php artisan migrate` if you created a new migration!*
 
-4. **Update Bulk Actions**:
-   - In the `groupedBulkActions([])` or `bulkActions([])` array, ensure the following bulk actions are present:
-     ```php
-     Tables\Actions\DeleteBulkAction::make(),
-     Tables\Actions\RestoreBulkAction::make(),
-     Tables\Actions\ForceDeleteBulkAction::make(),
-     ```
+2. **Add Trait to the Model:**
+   Open the model (e.g., `app/Models/User.php`) and add the `SoftDeletes` trait.
+   ```php
+   namespace App\Models;
 
-5. **Verify Imports**:
-   - Ensure the necessary Action classes are imported at the top of the file if they are not prefixed with `Tables\Actions\`.
+   use Illuminate\Database\Eloquent\SoftDeletes; // Import it!
 
-6. **Inform the User**:
-   - Let the user know that the table now supports filtering by "Trashed" records, and they can easily Restore or permanently Force Delete them directly from the UI.
+   class User extends Authenticatable
+   {
+       use SoftDeletes; // Add it inside the class!
+   }
+   ```
+
+## Phase 2: Wiring it into Filament
+
+Now we tell the Filament Resource to display and manage these soft-deleted records.
+
+Open your resource class (e.g., `UserResource.php`).
+
+1. **Add the Trashed Filter:**
+   In the `table()` method's `filters()` array, add the `TrashedFilter`. This gives users a dropdown to view "Without Trashed", "With Trashed", or "Only Trashed" records.
+   ```php
+   use Filament\Tables\Filters\TrashedFilter;
+
+   ->filters([
+       TrashedFilter::make(),
+   ])
+   ```
+
+2. **Add Restore & Force Delete Row Actions:**
+   In the `actions()` array, add the buttons to interact with individual deleted rows.
+   ```php
+   use Filament\Tables\Actions\RestoreAction;
+   use Filament\Tables\Actions\ForceDeleteAction;
+
+   ->actions([
+       // Existing actions like EditAction::make(),
+       RestoreAction::make(),
+       ForceDeleteAction::make(),
+   ])
+   ```
+
+3. **Add Restore & Force Delete Bulk Actions:**
+   In the `groupedBulkActions()` array, add the buttons to interact with multiple selected records.
+   ```php
+   use Filament\Tables\Actions\RestoreBulkAction;
+   use Filament\Tables\Actions\ForceDeleteBulkAction;
+
+   ->bulkActions([
+       Tables\Actions\BulkActionGroup::make([
+           // Existing bulk actions...
+           RestoreBulkAction::make(),
+           ForceDeleteBulkAction::make(),
+       ]),
+   ])
+   ```
+
+## Phase 3: Handling View & Edit Pages (Optional)
+
+If your resource uses separate View or Edit pages (not modals), you must also add the `TrashedFilter` traits to those pages to prevent 404 errors when attempting to view a soft-deleted record.
+
+In `app/Filament/Resources/UserResource/Pages/EditUser.php`:
+```php
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ForceDeleteAction;
+
+protected function getHeaderActions(): array
+{
+    return [
+        RestoreAction::make(),
+        ForceDeleteAction::make(),
+    ];
+}
+```
+
+### Pro-Tips
+- **Hidden by Default:** The Restore and Force Delete actions are smart. They will automatically hide themselves if the record is *not* soft-deleted, keeping your UI clean!
