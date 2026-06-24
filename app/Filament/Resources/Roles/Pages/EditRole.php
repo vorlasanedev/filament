@@ -24,6 +24,11 @@ class EditRole extends EditRecord
         ];
     }
 
+    public function getMaxContentWidth(): ?string
+    {
+        return 'full';
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $this->permissions = collect($data)
