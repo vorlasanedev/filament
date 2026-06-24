@@ -1,3 +1,7 @@
+---
+name: role-permission-setup
+description: Roles and Permissions implementation
+---
 # Skill Implementation: Roles & Permissions
 
 This document outlines the implementation details for the Roles and Permissions system within this Filament project.
@@ -55,3 +59,4 @@ php artisan shield:generate --resource=PermissionResource
 
 ## 6. Super Admin Access
 The `Super Admin` role bypasses all permission checks via Laravel's `Gate::before` intercept, which is automatically handled by the Shield package. Ensure that your initial user has the `Super Admin` role assigned to manage the system fully.
+

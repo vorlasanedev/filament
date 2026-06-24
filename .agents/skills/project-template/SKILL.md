@@ -1,3 +1,7 @@
+---
+name: project-template
+description: Foundational Project Architecture
+---
 # Skill: Foundational Project Architecture
 
 This document outlines the core architectural logic and technical philosophy behind our standard Laravel Filament project template. Understanding these principles is crucial for building robust, scalable applications.
@@ -23,3 +27,4 @@ Within a Cluster, we utilize **Top Navigation** (`SubNavigationPosition::Top`) t
 
 ### 5. Automated Seeding
 Instead of manually creating roles in the UI after a fresh installation, the foundational template relies on a `RoleAndPermissionSeeder`. This guarantees that the necessary foundational roles (`super_admin`, `admin`, `user`) are created programmatically and consistently across all environments.
+

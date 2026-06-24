@@ -1,3 +1,7 @@
+---
+name: users-menu-implementation
+description: Filament Top Navigation Clusters implementation
+---
 # Skill Implementation: Filament Top Navigation Clusters
 
 This document details the concepts and behaviors observed when implementing a "Top Navigation" (Tabs) menu structure using Filament Clusters.
@@ -26,3 +30,4 @@ When overriding properties like `$navigationGroup` in a child Resource class, PH
 protected static \UnitEnum|string|null $navigationGroup = 'Users';
 ```
 Using `?string` will trigger a fatal `TypeError` in PHP 8.2.
+

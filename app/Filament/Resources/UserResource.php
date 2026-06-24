@@ -106,6 +106,7 @@ class UserResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->recordActions([
+
                 EditAction::make(),
                 DeleteAction::make(),
                 RestoreAction::make(),
@@ -123,6 +124,18 @@ class UserResource extends Resource
                         }
                     })
                     ->deselectRecordsAfterCompletion(),
+                \Filament\Actions\BulkAction::make('export_pdf_bulk')
+                    ->label('Export Forms (PDF)')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('warning')
+                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        return response()->streamDownload(function () use ($records) {
+                            echo \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.user-export', ['users' => $records])->output();
+                        }, 'user-forms-export.pdf');
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                \Filament\Actions\ExportBulkAction::make()
+                    ->exporter(\App\Filament\Exports\UserExporter::class),
                 DeleteBulkAction::make(),
                 RestoreBulkAction::make(),
                 ForceDeleteBulkAction::make(),

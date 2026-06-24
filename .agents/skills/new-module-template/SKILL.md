@@ -1,3 +1,7 @@
+---
+name: new-module-template
+description: Building New Modules with Row-Level Security
+---
 # Skill: Building New Modules with Row-Level Security
 
 This document outlines the architectural logic and security philosophy for adding brand new feature modules (like Inventory, Employees, or Finance) to our standard Filament project template.
@@ -27,3 +31,4 @@ Hiding data in the UI is not enough; we must secure the backend routes.
 - Using Filament Shield, we generate Laravel Policies for every model in the module.
 - We customize the `update`, `delete`, and `restore` policy methods. Even if a user bypasses the UI and guesses the ID of a record they don't own, the Policy verifies `return $model->user_id === $authUser->id;` and blocks unauthorized modifications.
 - **Force Delete**: Administrators are explicitly denied the `ForceDelete` permission via Spatie Roles, leaving that destructive action solely to the Superadmin.
+
