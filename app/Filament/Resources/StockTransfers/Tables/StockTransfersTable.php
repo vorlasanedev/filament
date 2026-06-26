@@ -13,16 +13,17 @@ class StockTransfersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['sourceLocation', 'destinationLocation']))
             ->columns([
                 TextColumn::make('reference')
                     ->searchable(),
                 TextColumn::make('type')
                     ->searchable(),
-                TextColumn::make('source_location_id')
-                    ->numeric()
+                TextColumn::make('sourceLocation.name')
+                    ->label('Source Location')
                     ->sortable(),
-                TextColumn::make('destination_location_id')
-                    ->numeric()
+                TextColumn::make('destinationLocation.name')
+                    ->label('Destination Location')
                     ->sortable(),
                 TextColumn::make('status')
                     ->searchable(),

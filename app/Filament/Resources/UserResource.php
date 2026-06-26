@@ -77,7 +77,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with('employee'))
+            ->modifyQueryUsing(fn ($query) => $query->with(['employee', 'roles']))
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar_url')
                     ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl() ?? "https://ui-avatars.com/api/?name=" . urlencode($record->name))
@@ -129,9 +129,13 @@ class UserResource extends Resource
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('warning')
                     ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
-                        return response()->streamDownload(function () use ($records) {
-                            echo \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.user-export', ['users' => $records])->setPaper('a4', 'portrait')->output();
-                        }, 'user-forms-export.pdf');
+                        \App\Jobs\ExportUsersPdfJob::dispatch($records->pluck('id')->toArray(), auth()->id());
+                        
+                        \Filament\Notifications\Notification::make()
+                            ->title('Export Started')
+                            ->body('Your PDF export has been queued and will be ready shortly. You will receive a notification when it is done.')
+                            ->success()
+                            ->send();
                     })
                     ->deselectRecordsAfterCompletion(),
                 \Filament\Actions\ExportBulkAction::make()

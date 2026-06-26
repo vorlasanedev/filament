@@ -13,12 +13,13 @@ class StockMovesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['transfer', 'product', 'sourceLocation', 'destinationLocation']))
             ->columns([
-                TextColumn::make('stock_transfer_id')
-                    ->numeric()
+                TextColumn::make('transfer.reference')
+                    ->label('Transfer Reference')
                     ->sortable(),
-                TextColumn::make('product_id')
-                    ->numeric()
+                TextColumn::make('product.name')
+                    ->label('Product')
                     ->sortable(),
                 TextColumn::make('description')
                     ->searchable(),
@@ -27,11 +28,11 @@ class StockMovesTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->searchable(),
-                TextColumn::make('source_location_id')
-                    ->numeric()
+                TextColumn::make('sourceLocation.name')
+                    ->label('Source Location')
                     ->sortable(),
-                TextColumn::make('destination_location_id')
-                    ->numeric()
+                TextColumn::make('destinationLocation.name')
+                    ->label('Destination Location')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

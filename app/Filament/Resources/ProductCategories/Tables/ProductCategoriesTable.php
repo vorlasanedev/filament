@@ -13,11 +13,12 @@ class ProductCategoriesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('parent'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('parent_id')
-                    ->numeric()
+                TextColumn::make('parent.name')
+                    ->label('Parent Category')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

@@ -14,6 +14,7 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('category'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
@@ -43,8 +44,8 @@ class ProductsTable
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
-                TextColumn::make('product_category_id')
-                    ->numeric()
+                TextColumn::make('category.name')
+                    ->label('Category')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

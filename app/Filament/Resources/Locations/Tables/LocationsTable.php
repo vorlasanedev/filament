@@ -14,16 +14,17 @@ class LocationsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['warehouse', 'parent']))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('type')
                     ->searchable(),
-                TextColumn::make('warehouse_id')
-                    ->numeric()
+                TextColumn::make('warehouse.name')
+                    ->label('Warehouse')
                     ->sortable(),
-                TextColumn::make('parent_id')
-                    ->numeric()
+                TextColumn::make('parent.name')
+                    ->label('Parent Location')
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean(),
