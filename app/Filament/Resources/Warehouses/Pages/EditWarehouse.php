@@ -16,4 +16,13 @@ class EditWarehouse extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
 }

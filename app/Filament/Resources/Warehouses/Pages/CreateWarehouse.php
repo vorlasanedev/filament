@@ -8,4 +8,13 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateWarehouse extends CreateRecord
 {
     protected static string $resource = WarehouseResource::class;
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
 }

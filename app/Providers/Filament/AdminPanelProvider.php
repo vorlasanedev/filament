@@ -34,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
             ->favicon(asset('favicon.png'))
             ->globalSearch(false)
+            ->breadcrumbs(false)
             ->profile()
             ->userMenuItems([
                 'update_password' => \Filament\Actions\Action::make('update_password')
@@ -98,6 +99,28 @@ class AdminPanelProvider extends PanelProvider
                         margin-bottom: 0 !important;
                         background: transparent !important;
                         box-shadow: none !important;
+                    }
+                    .fi-main {
+                        padding-top: 3px !important;
+                        margin-top: 0 !important;
+                    }
+                    .fi-page {
+                        gap: 3px !important;
+                    }
+                    .fi-header {
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    h1.fi-header-heading {
+                        font-size: 20px !important;
+                    }
+                    .fi-layout {
+                        margin-top: 2px !important;
+                    }
+                    @media (max-width: 1024px) {
+                        .fi-main {
+                            padding-top: 3px !important;
+                        }
                     }
                 </style>'),
             )
