@@ -5,16 +5,15 @@ description: Zero-to-Hero instructions on how to change the sub-menu order and p
 
 # Skill: Changing Menu Position for the Inventory Module
 
-To reorder sub-menus or move items within the Inventory module, you need to configure the global Panel Provider for group ordering and the individual Resource/Page classes for specific placement.
+To reorder sub-menus or move items within the Inventory module, you need to configure the global Panel Provider for standard group ordering, but **most importantly**, you must configure the `$navigationSort` of the Resources/Pages within the cluster itself.
 
 Follow these steps:
 
-## Step 1: Reordering Groups in the Panel Provider
-If your Inventory module has multiple dropdown groups (like `Operations`, `Products`, `Reports`, `Configuration`) and you want to change the order they appear from left to right (or top to bottom), update your Panel Provider (e.g., `app/Providers/Filament/AdminPanelProvider.php`).
-
-Find the `->navigationGroups([...])` method and arrange the array in your desired order:
+## Step 1: Reordering Groups Globally in the Panel Provider
+To arrange the sequence of dropdown groups for standard sidebar menus, define a simple array of strings in your Panel Provider (e.g., `app/Providers/Filament/AdminPanelProvider.php`).
 
 ```php
+// In your panel provider:
 ->navigationGroups([
     'Operations',
     'Products',
@@ -22,8 +21,27 @@ Find the `->navigationGroups([...])` method and arrange the array in your desire
     'Configuration',
 ])
 ```
+*(Note: Do NOT use `NavigationGroup::make()->sort()` as it will cause a 500 BadMethodCallException!)*
 
-## Step 2: Positioning a Standalone Menu Item
+## Step 2: Sorting Cluster Navigation Groups
+**CRITICAL FOR CLUSTERS:** A Filament Cluster dynamically orders its sub-navigation groups based on the **lowest `$navigationSort` of the items inside that group**.
+
+If a group is appearing out of order (for example, at the very front), it means one of the Resources/Pages in that group has a `null` or `0` sort order. 
+
+To fix this, you must ensure **all** Resources/Pages in your cluster have a `$navigationSort` defined!
+
+For example, if you want `Configuration` to appear last, make sure all its resources have the highest sort numbers:
+```php
+// In ProductTypeResource.php
+protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
+protected static ?int $navigationSort = 8;
+
+// In ProductUnitResource.php
+protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
+protected static ?int $navigationSort = 9;
+```
+
+## Step 3: Positioning a Standalone Menu Item
 If you want an item (like the `Overview` page) to appear directly on the navigation bar without a dropdown, assign its `navigationGroup` to `null`.
 Items without a group naturally render first, before the dropdown groups.
 
@@ -32,18 +50,15 @@ Items without a group naturally render first, before the dropdown groups.
 protected static string|\UnitEnum|null $navigationGroup = null;
 ```
 
-## Step 3: Sorting Items within a Group or Cluster
-To explicitly control the position of a Resource/Page—either within its dropdown group or at the top level of the cluster—use the `$navigationSort` property.
+## Step 4: Making a Page the Default Landing Page
+To explicitly control the position of a Resource/Page to be the absolute first item in the cluster (making it the default landing page), use a negative number.
 
 ```php
 protected static ?int $navigationSort = -1;
 ```
-* **Negative numbers (e.g., `-1`)**: Ensure the item is pushed to the very front. This is ideal for making a page the default landing page for the cluster.
-* **Positive numbers (e.g., `1, 2, 3`)**: Order items sequentially within their respective `navigationGroup`.
 
-## Complete Example
-
-If you want an `OverviewDashboard` to be the first item outside of any dropdown group, you would configure it like this:
+## Complete Standalone Example
+If you want an `OverviewDashboard` to be the first item outside of any dropdown group, configure it like this:
 
 ```php
 namespace App\Filament\Pages;

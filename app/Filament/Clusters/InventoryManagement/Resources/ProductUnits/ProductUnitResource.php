@@ -25,6 +25,8 @@ class ProductUnitResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
+    protected static ?int $navigationSort = 9;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
