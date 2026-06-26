@@ -3,8 +3,6 @@
 namespace App\Filament\Clusters\InventoryManagement\Resources\ProductTypes;
 
 use App\Filament\Clusters\InventoryManagement\InventoryManagementCluster;
-use App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Pages\CreateProductType;
-use App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Pages\EditProductType;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Pages\ListProductTypes;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Schemas\ProductTypeForm;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Tables\ProductTypesTable;
@@ -50,8 +48,6 @@ class ProductTypeResource extends Resource
     {
         return [
             'index' => ListProductTypes::route('/'),
-            'create' => CreateProductType::route('/create'),
-            'edit' => EditProductType::route('/{record}/edit'),
         ];
     }
 

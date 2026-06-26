@@ -33,7 +33,7 @@ class ProductUnitsTable
                 RestoreAction::make(),
                 ForceDeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->groupedBulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     RestoreBulkAction::make(),

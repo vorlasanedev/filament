@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\InventoryManagement\Resources\ProductTypes\Schemas;
 
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class ProductTypeForm
@@ -10,7 +11,9 @@ class ProductTypeForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 }
