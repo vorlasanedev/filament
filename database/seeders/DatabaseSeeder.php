@@ -22,5 +22,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Root@mysql'),
             'is_active' => true,
         ]);
+
+        $this->call([
+            OneMillionUsersSeeder::class,
+            ProductCategorySeeder::class,
+            ProductTypeSeeder::class,
+            ProductUnitSeeder::class,
+            OneHundredThousandProductsSeeder::class,
+        ]);
     }
 }

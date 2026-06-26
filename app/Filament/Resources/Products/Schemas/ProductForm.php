@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -16,12 +17,16 @@ class ProductForm
                     ->required(),
                 TextInput::make('sku')
                     ->label('SKU'),
-                TextInput::make('type')
-                    ->required()
-                    ->default('storable'),
-                TextInput::make('unit')
-                    ->required()
-                    ->default('pcs'),
+                Select::make('product_type_id')
+                    ->relationship('type', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Select::make('product_unit_id')
+                    ->relationship('unit', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 TextInput::make('cost')
                     ->required()
                     ->numeric()
@@ -47,8 +52,10 @@ class ProductForm
                     ->default(0),
                 Toggle::make('is_active')
                     ->required(),
-                TextInput::make('product_category_id')
-                    ->numeric(),
+                Select::make('product_category_id')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 }

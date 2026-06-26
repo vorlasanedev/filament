@@ -19,13 +19,7 @@ class ProductCategoryPolicy
 
     public function view(AuthUser $authUser, ProductCategory $productCategory): bool
     {
-        if (!$authUser->can('View:ProductCategory')) {
-            return false;
-        }
-        if ($authUser->hasRole('user_inventory')) {
-            return $productCategory->user_id === $authUser->id;
-        }
-        return true;
+        return $authUser->can('View:ProductCategory');
     }
 
     public function create(AuthUser $authUser): bool
@@ -35,35 +29,17 @@ class ProductCategoryPolicy
 
     public function update(AuthUser $authUser, ProductCategory $productCategory): bool
     {
-        if (!$authUser->can('Update:ProductCategory')) {
-            return false;
-        }
-        if ($authUser->hasRole('user_inventory')) {
-            return $productCategory->user_id === $authUser->id;
-        }
-        return true;
+        return $authUser->can('Update:ProductCategory');
     }
 
     public function delete(AuthUser $authUser, ProductCategory $productCategory): bool
     {
-        if (!$authUser->can('Delete:ProductCategory')) {
-            return false;
-        }
-        if ($authUser->hasRole('user_inventory')) {
-            return $productCategory->user_id === $authUser->id;
-        }
-        return true;
+        return $authUser->can('Delete:ProductCategory');
     }
 
     public function restore(AuthUser $authUser, ProductCategory $productCategory): bool
     {
-        if (!$authUser->can('Restore:ProductCategory')) {
-            return false;
-        }
-        if ($authUser->hasRole('user_inventory')) {
-            return $productCategory->user_id === $authUser->id;
-        }
-        return true;
+        return $authUser->can('Restore:ProductCategory');
     }
 
     public function forceDelete(AuthUser $authUser, ProductCategory $productCategory): bool

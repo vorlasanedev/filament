@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 'Users',
                 'Products',
                 'Operations',
-                'Report',
+                'Reports',
                 'Configuration',
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

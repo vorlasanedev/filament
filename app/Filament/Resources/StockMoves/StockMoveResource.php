@@ -23,7 +23,7 @@ class StockMoveResource extends Resource
 
     protected static ?string $cluster = \App\Filament\Clusters\InventoryManagement\InventoryManagementCluster::class;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Report';
+    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 4;
 

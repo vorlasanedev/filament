@@ -14,17 +14,19 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with('category'))
+            ->modifyQueryUsing(fn ($query) => $query->with(['category', 'type', 'unit']))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
-                TextColumn::make('type')
-                    ->searchable(),
-                TextColumn::make('unit')
-                    ->searchable(),
+                TextColumn::make('type.name')
+                    ->label('Type')
+                    ->sortable(),
+                TextColumn::make('unit.name')
+                    ->label('Unit')
+                    ->sortable(),
                 TextColumn::make('cost')
                     ->money()
                     ->sortable(),
