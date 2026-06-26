@@ -52,4 +52,9 @@ class ProductUnitResource extends Resource
             'edit' => EditProductUnit::route('/{record}/edit'),
         ];
     }
+
+    public static function getSubNavigationPosition(): \Filament\Pages\Enums\SubNavigationPosition
+    {
+        return \Filament\Pages\Enums\SubNavigationPosition::Top;
+    }
 }

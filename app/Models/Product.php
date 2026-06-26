@@ -21,10 +21,25 @@ class Product extends Model
         'product_category_id',
         'product_type_id',
         'product_unit_id',
+        'can_be_sold',
+        'can_be_purchased',
+        'is_favorite',
+        'image',
+        'track_inventory',
+        'invoicing_policy',
+        'sales_taxes',
+        'purchase_taxes',
+        'barcode',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'can_be_sold' => 'boolean',
+        'can_be_purchased' => 'boolean',
+        'is_favorite' => 'boolean',
+        'track_inventory' => 'boolean',
+        'sales_taxes' => 'array',
+        'purchase_taxes' => 'array',
     ];
 
     public function category()
