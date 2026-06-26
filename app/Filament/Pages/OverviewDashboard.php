@@ -10,9 +10,11 @@ class OverviewDashboard extends Page
 
     protected static ?string $cluster = \App\Filament\Clusters\InventoryManagement\InventoryManagementCluster::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Overview';
+    protected static ?string $navigationLabel = 'Overview';
 
-    protected static ?int $navigationSort = 1;
+    protected static string|\UnitEnum|null $navigationGroup = null;
+
+    protected static ?int $navigationSort = -1;
 
     protected string $view = 'filament.pages.overview-dashboard';
 }
