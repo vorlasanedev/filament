@@ -14,7 +14,7 @@
             @endphp
 
             @if ($navigationGroupLabel)
-                <x-filament::dropdown placement="bottom-start">
+                <x-filament::dropdown placement="bottom-start" teleport="true">
                     <x-slot name="trigger">
                         <x-filament::tabs.item
                             :active="$isNavigationGroupActive"
