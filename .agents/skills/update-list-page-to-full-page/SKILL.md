@@ -15,12 +15,12 @@ When the user asks to make a Filament page (like a table, list, or resource page
    - Check if the `getMaxContentWidth` method already exists in the class.
    - If it doesn't, use the `replace_file_content` tool to add the following method to the class:
      ```php
-     public function getMaxContentWidth(): ?string
+     public function getMaxContentWidth(): \Filament\Support\Enums\Width|string|null
      {
          return 'full';
      }
      ```
-   - *Note: For Filament v3, you can also return an enum like `\Filament\Support\Enums\MaxWidth::Full`, but returning the string `'full'` works universally.*
+   - *Note: For Filament v3, you can also return an enum like `\Filament\Support\Enums\Width::Full`, but returning the string `'full'` works universally.*
 
 3. **Verify the Change**:
    - Ensure the PHP syntax is correct and the method is placed cleanly inside the class body, typically right below the `getActions()` or `getHeaderActions()` array.

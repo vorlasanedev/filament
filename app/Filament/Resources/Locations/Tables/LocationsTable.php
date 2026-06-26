@@ -20,11 +20,12 @@ class LocationsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with(['warehouse', 'parent']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['warehouse', 'parent', 'locationType']))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('type')
+                TextColumn::make('locationType.name')
+                    ->label('Type')
                     ->searchable(),
                 TextColumn::make('warehouse.name')
                     ->label('Warehouse')
