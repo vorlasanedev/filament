@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Roles;
 
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use App\Filament\Resources\Roles\Pages\CreateRole;
-use App\Filament\Resources\Roles\Pages\EditRole;
 use App\Filament\Resources\Roles\Pages\ListRoles;
-use App\Filament\Resources\Roles\Pages\ViewRole;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Traits\HasShieldFormComponents;
 use BezhanSalleh\PluginEssentials\Concerns\Resource as Essentials;
@@ -44,6 +41,11 @@ class RoleResource extends Resource
     use HasShieldFormComponents;
 
     protected static ?int $navigationSort = 2;
+
+    public static function getSubNavigationPosition(): \Filament\Pages\Enums\SubNavigationPosition
+    {
+        return \Filament\Pages\Enums\SubNavigationPosition::Top;
+    }
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -144,9 +146,6 @@ class RoleResource extends Resource
     {
         return [
             'index' => ListRoles::route('/'),
-            'create' => CreateRole::route('/create'),
-            'view' => ViewRole::route('/{record}'),
-            'edit' => EditRole::route('/{record}/edit'),
         ];
     }
 

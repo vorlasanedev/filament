@@ -83,6 +83,24 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\View\PanelsRenderHook::BODY_END,
                 fn () => view('filament.hooks.viewer-js'),
             )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::TOPBAR_START,
+                fn () => new \Illuminate\Support\HtmlString('<div id="topbar-sub-nav-target" style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; height: 100%; z-index: 10; width: max-content;"></div>'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::STYLES_AFTER,
+                fn () => new \Illuminate\Support\HtmlString('<style>
+                    .fi-topbar {
+                        position: relative;
+                    }
+                    .fi-page-sub-navigation-tabs {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                        background: transparent !important;
+                        box-shadow: none !important;
+                    }
+                </style>'),
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);
