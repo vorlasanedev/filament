@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
             ->favicon(asset('favicon.png'))
             ->globalSearch(false)
-            ->breadcrumbs(false)
+            ->breadcrumbs(true)
             ->profile()
             ->userMenuItems([
                 'update_password' => \Filament\Actions\Action::make('update_password')
