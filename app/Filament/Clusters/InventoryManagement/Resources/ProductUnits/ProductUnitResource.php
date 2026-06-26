@@ -3,8 +3,6 @@
 namespace App\Filament\Clusters\InventoryManagement\Resources\ProductUnits;
 
 use App\Filament\Clusters\InventoryManagement\InventoryManagementCluster;
-use App\Filament\Clusters\InventoryManagement\Resources\ProductUnits\Pages\CreateProductUnit;
-use App\Filament\Clusters\InventoryManagement\Resources\ProductUnits\Pages\EditProductUnit;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductUnits\Pages\ListProductUnits;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductUnits\Schemas\ProductUnitForm;
 use App\Filament\Clusters\InventoryManagement\Resources\ProductUnits\Tables\ProductUnitsTable;
@@ -50,8 +48,6 @@ class ProductUnitResource extends Resource
     {
         return [
             'index' => ListProductUnits::route('/'),
-            'create' => CreateProductUnit::route('/create'),
-            'edit' => EditProductUnit::route('/{record}/edit'),
         ];
     }
 
