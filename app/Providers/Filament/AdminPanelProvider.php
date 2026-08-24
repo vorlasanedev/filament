@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarWidth('15rem')
             ->brandLogo(fn () => view('filament.brand'))
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
+            ->passwordReset()
             ->favicon(asset('favicon.png'))
             ->globalSearch(false)
             ->breadcrumbs(true)

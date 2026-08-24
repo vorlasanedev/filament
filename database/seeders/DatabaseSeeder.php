@@ -21,6 +21,16 @@ class DatabaseSeeder extends Seeder
             'name' => 'superuser',
             'password' => bcrypt('Root@mysql'),
             'is_active' => true,
+            'email_verified_at' => now(),
+        ]);
+
+        User::firstOrCreate([
+            'email' => 'admin@example.com',
+        ], [
+            'name' => 'Admin User',
+            'password' => bcrypt('Root@mysql'),
+            'is_active' => true,
+            'email_verified_at' => now(),
         ]);
 
         $this->call([

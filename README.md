@@ -9,7 +9,7 @@
 
 ## Login Credentials
 
-- **Email:** `superuser@gmail.com`
+- **Email:** `admin@example.com` or `superuser@gmail.com`
 - **Password:** `Root@mysql`
 
 ## About Laravel

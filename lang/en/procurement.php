@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'order_number' => 'Order No.',
+    'supplier' => 'Supplier',
+    'purchase_request_no' => 'Purchase Request No.',
+    'request_number' => 'Request No.',
+    'currency' => 'Currency',
+    'exchange_rate' => 'Exchange Rate',
+    'status' => 'Status',
+    'ordered_at' => 'Ordered At',
+    'requester' => 'Requester',
+    'department' => 'Department',
+    'fund_code' => 'Fund Code',
+    'justification' => 'Justification',
+    'product' => 'Product',
+    'quantity' => 'Quantity',
+    'unit_cost' => 'Unit Cost',
+    'total_cost' => 'Total Cost',
+    'approver' => 'Approver',
+    'level' => 'Level',
+    'remarks' => 'Remarks',
+    'approved_at' => 'Approved At',
+    'supplier_name' => 'Supplier Name',
+    'contact_info' => 'Contact Info',
+    'address' => 'Address',
+    'tax_id' => 'Tax ID',
+];

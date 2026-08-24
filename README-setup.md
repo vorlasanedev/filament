@@ -66,11 +66,9 @@ php artisan shield:super-admin --user=1
 ```
 *(When prompted for the panel, press `0` for `admin`)*
 
-This creates an admin account with the following credentials:
-- **Email:** `superuser@gmail.com`
+This creates admin accounts with the following credentials:
+- **Email:** `admin@example.com` or `superuser@gmail.com`
 - **Password:** `Root@mysql`
-
-admin@example.com Root@mysql
 
 ## Step 6: Start the Server
 Now that everything is installed and configured, you can start the development server:
