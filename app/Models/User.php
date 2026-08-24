@@ -26,6 +26,24 @@ class User extends Authenticatable implements JWTSubject, FilamentUser, HasAvata
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, LogsActivity, SoftDeletes, HasRoles;
 
+    public static function booted(): void
+    {
+        static::updated(function (User $user) {
+            if ($user->wasChanged('avatar_url')) {
+                $oldAvatar = $user->getOriginal('avatar_url');
+                if ($oldAvatar && Storage::disk('public')->exists($oldAvatar)) {
+                    Storage::disk('public')->delete($oldAvatar);
+                }
+            }
+        });
+
+        static::forceDeleted(function (User $user) {
+            if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
+                Storage::disk('public')->delete($user->avatar_url);
+            }
+        });
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */

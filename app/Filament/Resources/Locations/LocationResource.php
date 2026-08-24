@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Locations;
 
-use App\Filament\Resources\Locations\Pages\CreateLocation;
-use App\Filament\Resources\Locations\Pages\EditLocation;
 use App\Filament\Resources\Locations\Pages\ListLocations;
 use App\Filament\Resources\Locations\Schemas\LocationForm;
 use App\Filament\Resources\Locations\Tables\LocationsTable;
@@ -44,12 +42,19 @@ class LocationResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListLocations::route('/'),
-            'create' => CreateLocation::route('/create'),
-            'edit' => EditLocation::route('/{record}/edit'),
         ];
     }
 }

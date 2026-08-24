@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockTransfer extends Model
 {
+    use \App\Models\Traits\HasUserOwnership;
+
     protected $fillable = [
         'reference',
         'type',

@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
+    use \App\Models\Traits\HasUserOwnership;
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
-        'type',
+        'location_type_id',
         'warehouse_id',
         'parent_id',
         'is_active',
@@ -21,6 +25,11 @@ class Location extends Model
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function locationType()
+    {
+        return $this->belongsTo(LocationType::class);
     }
 
     public function parent()

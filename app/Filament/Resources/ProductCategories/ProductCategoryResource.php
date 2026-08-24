@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\ProductCategories;
 
-use App\Filament\Resources\ProductCategories\Pages\CreateProductCategory;
-use App\Filament\Resources\ProductCategories\Pages\EditProductCategory;
 use App\Filament\Resources\ProductCategories\Pages\ListProductCategories;
 use App\Filament\Resources\ProductCategories\Schemas\ProductCategoryForm;
 use App\Filament\Resources\ProductCategories\Tables\ProductCategoriesTable;
@@ -44,12 +42,19 @@ class ProductCategoryResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListProductCategories::route('/'),
-            'create' => CreateProductCategory::route('/create'),
-            'edit' => EditProductCategory::route('/{record}/edit'),
         ];
     }
 }

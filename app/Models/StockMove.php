@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockMove extends Model
 {
+    use \App\Models\Traits\HasUserOwnership;
+
     protected $fillable = [
         'stock_transfer_id',
         'product_id',

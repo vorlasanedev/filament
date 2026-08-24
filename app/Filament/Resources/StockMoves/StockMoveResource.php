@@ -23,7 +23,7 @@ class StockMoveResource extends Resource
 
     protected static ?string $cluster = \App\Filament\Clusters\InventoryManagement\InventoryManagementCluster::class;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Report';
+    protected static string|UnitEnum|null $navigationGroup = 'Reports';
 
     protected static ?int $navigationSort = 4;
 
@@ -44,6 +44,15 @@ class StockMoveResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
     }
 
     public static function getPages(): array

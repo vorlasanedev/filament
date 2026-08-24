@@ -13,7 +13,10 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->before(function ($livewire) {
+                    $livewire->resetTableSearch();
+                }),
         ];
     }
     

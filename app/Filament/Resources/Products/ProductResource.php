@@ -25,6 +25,8 @@ class ProductResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Products';
 
+    protected static ?string $navigationLabel = 'Product List';
+
     protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
@@ -44,6 +46,15 @@ class ProductResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
+    }
+
     public static function getPages(): array
     {
         return [
@@ -51,5 +62,10 @@ class ProductResource extends Resource
             'create' => CreateProduct::route('/create'),
             'edit' => EditProduct::route('/{record}/edit'),
         ];
+    }
+
+    public static function getSubNavigationPosition(): \Filament\Pages\Enums\SubNavigationPosition
+    {
+        return \Filament\Pages\Enums\SubNavigationPosition::Top;
     }
 }

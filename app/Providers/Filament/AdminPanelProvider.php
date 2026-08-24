@@ -27,11 +27,15 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('15rem')
             ->brandLogo(fn () => view('filament.brand'))
             ->login(\App\Filament\Pages\Auth\CustomLogin::class)
+            ->passwordReset()
+            ->favicon(asset('favicon.png'))
             ->globalSearch(false)
+            ->breadcrumbs(true)
             ->profile()
             ->userMenuItems([
                 'update_password' => \Filament\Actions\Action::make('update_password')
@@ -45,6 +49,13 @@ class AdminPanelProvider extends PanelProvider
             ->font('Noto Sans Lao')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\Filament\Clusters')
+            ->navigationGroups([
+                'Users',
+                'Operations',
+                'Products',
+                'Reports',
+                'Configuration',
+            ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
@@ -68,11 +79,50 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-                    ->navigationGroup('Roles and Permission')
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,
                 fn () => view('filament.hooks.viewer-js'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::TOPBAR_START,
+                fn () => new \Illuminate\Support\HtmlString('<div id="topbar-sub-nav-target" style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; height: 100%; z-index: 10; width: max-content;"></div>'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::STYLES_AFTER,
+                fn () => new \Illuminate\Support\HtmlString('<style>
+                    .fi-topbar {
+                        position: relative;
+                    }
+                    .fi-page-sub-navigation-tabs {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                        background: transparent !important;
+                        box-shadow: none !important;
+                    }
+                    .fi-main {
+                        padding-top: 3px !important;
+                        margin-top: 0 !important;
+                    }
+                    .fi-page {
+                        gap: 3px !important;
+                    }
+                    .fi-header {
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    h1.fi-header-heading {
+                        font-size: 20px !important;
+                    }
+                    .fi-layout {
+                        margin-top: 2px !important;
+                    }
+                    @media (max-width: 1024px) {
+                        .fi-main {
+                            padding-top: 3px !important;
+                        }
+                    }
+                </style>'),
             )
             ->authMiddleware([
                 Authenticate::class,

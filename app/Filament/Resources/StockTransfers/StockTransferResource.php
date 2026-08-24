@@ -46,6 +46,15 @@ class StockTransferResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
+    }
+
     public static function getPages(): array
     {
         return [

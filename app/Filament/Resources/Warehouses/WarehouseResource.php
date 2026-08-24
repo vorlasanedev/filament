@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Warehouses;
 
-use App\Filament\Resources\Warehouses\Pages\CreateWarehouse;
-use App\Filament\Resources\Warehouses\Pages\EditWarehouse;
 use App\Filament\Resources\Warehouses\Pages\ListWarehouses;
 use App\Filament\Resources\Warehouses\Schemas\WarehouseForm;
 use App\Filament\Resources\Warehouses\Tables\WarehousesTable;
@@ -44,12 +42,19 @@ class WarehouseResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (auth()->check() && auth()->user()->hasRole('user_inventory')) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListWarehouses::route('/'),
-            'create' => CreateWarehouse::route('/create'),
-            'edit' => EditWarehouse::route('/{record}/edit'),
         ];
     }
 }

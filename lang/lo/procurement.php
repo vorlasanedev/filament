@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'order_number' => 'ເລກທີໃບສັ່ງຊື້',
+    'supplier' => 'ຜູ້ສະໜອງ',
+    'purchase_request_no' => 'ເລກທີຮ້ອງຂໍ',
+    'request_number' => 'ເລກທີຮ້ອງຂໍ',
+    'currency' => 'ສະກຸນເງິນ',
+    'exchange_rate' => 'ອັດຕາແລກປ່ຽນ',
+    'status' => 'ສະຖານະ',
+    'ordered_at' => 'ວັນທີສັ່ງຊື້',
+    'requester' => 'ຜູ້ຮ້ອງຂໍ',
+    'department' => 'ພາກສ່ວນ',
+    'fund_code' => 'ລະຫັດທຶນ',
+    'justification' => 'ເຫດຜົນການຮ້ອງຂໍ',
+    'product' => 'ສິນຄ້າ',
+    'quantity' => 'ຈຳນວນ',
+    'unit_cost' => 'ລາຄາຫົວໜ່ວຍ',
+    'total_cost' => 'ລວມມູນຄ່າ',
+    'approver' => 'ຜູ້ອະນຸມັດ',
+    'level' => 'ລະດັບ',
+    'remarks' => 'ໝາຍເຫດ',
+    'approved_at' => 'ວັນທີອະນຸມັດ',
+    'supplier_name' => 'ຊື່ຜູ້ສະໜອງ',
+    'contact_info' => 'ຂໍ້ມູນຕິດຕໍ່',
+    'address' => 'ທີ່ຢູ່',
+    'tax_id' => 'ເລກປະຈຳຕົວຜູ້ເສຍພາສີ',
+];

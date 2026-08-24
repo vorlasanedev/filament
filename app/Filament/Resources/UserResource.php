@@ -25,13 +25,11 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
-    protected static ?string $cluster = UserManagementCluster::class;
     protected static ?int $navigationSort = 1;
+    protected static ?string $cluster = \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
 
-    public static function getNavigationLabel(): string
-    {
-        return __('navigation.users');
-    }
+
+
 
     public static function getModelLabel(): string
     {
@@ -79,8 +77,10 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['employee', 'roles']))
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar_url')
+                    ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl() ?? "https://ui-avatars.com/api/?name=" . urlencode($record->name))
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -106,6 +106,7 @@ class UserResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->recordActions([
+
                 EditAction::make(),
                 DeleteAction::make(),
                 RestoreAction::make(),
@@ -123,6 +124,22 @@ class UserResource extends Resource
                         }
                     })
                     ->deselectRecordsAfterCompletion(),
+                \Filament\Actions\BulkAction::make('export_pdf_bulk')
+                    ->label('Export Forms (PDF)')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('warning')
+                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        \App\Jobs\ExportUsersPdfJob::dispatch($records->pluck('id')->toArray(), auth()->id());
+                        
+                        \Filament\Notifications\Notification::make()
+                            ->title('Export Started')
+                            ->body('Your PDF export has been queued and will be ready shortly. You will receive a notification when it is done.')
+                            ->success()
+                            ->send();
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                \Filament\Actions\ExportBulkAction::make()
+                    ->exporter(\App\Filament\Exports\UserExporter::class),
                 DeleteBulkAction::make(),
                 RestoreBulkAction::make(),
                 ForceDeleteBulkAction::make(),
@@ -140,8 +157,6 @@ class UserResource extends Resource
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 }

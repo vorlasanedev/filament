@@ -15,11 +15,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $superAdmin = User::firstOrCreate([
+            'email' => 'superuser@gmail.com',
+        ], [
+            'name' => 'superuser',
+            'password' => bcrypt('Root@mysql'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::firstOrCreate([
+            'email' => 'admin@example.com',
+        ], [
+            'name' => 'Admin User',
+            'password' => bcrypt('Root@mysql'),
+            'is_active' => true,
+            'email_verified_at' => now(),
+        ]);
+
+        $this->call([
+            OneMillionUsersSeeder::class,
+            ProductCategorySeeder::class,
+            ProductTypeSeeder::class,
+            ProductUnitSeeder::class,
+            OneHundredThousandProductsSeeder::class,
         ]);
     }
 }
