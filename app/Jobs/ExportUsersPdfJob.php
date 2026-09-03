@@ -4,8 +4,8 @@ namespace App\Jobs;
 
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
-use Filament\Notifications\Actions\Action;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +16,7 @@ class ExportUsersPdfJob implements ShouldQueue
     use Queueable;
 
     public $userIds;
+
     public $recipientId;
 
     /**
@@ -35,14 +36,14 @@ class ExportUsersPdfJob implements ShouldQueue
         $users = User::whereIn('id', $this->userIds)->get();
         $recipient = User::find($this->recipientId);
 
-        if (!$recipient) {
+        if (! $recipient) {
             return;
         }
 
         $pdf = Pdf::loadView('pdf.user-export', ['users' => $users])->setPaper('a4', 'portrait');
-        
-        $filename = 'exports/user-forms-export-' . Str::uuid() . '.pdf';
-        
+
+        $filename = 'exports/user-forms-export-'.Str::uuid().'.pdf';
+
         Storage::disk('public')->put($filename, $pdf->output());
 
         Notification::make()

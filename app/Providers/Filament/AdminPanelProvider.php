@@ -6,7 +6,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -78,8 +77,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
+            ->renderHook(
+                \Filament\Tables\View\TablesRenderHook::TOOLBAR_COLUMN_MANAGER_TRIGGER_AFTER,
+                fn () => view('filament.resources.user-resource.components.view-toggle'),
+                scopes: \App\Filament\Resources\UserResource\Pages\ListUsers::class,
+            )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,
                 fn () => view('filament.hooks.viewer-js'),
@@ -101,15 +105,33 @@ class AdminPanelProvider extends PanelProvider
                         box-shadow: none !important;
                     }
                     .fi-main {
-                        padding-top: 3px !important;
+                        padding-top: 4px !important;
                         margin-top: 0 !important;
                     }
+                    .fi-page-header-main-ctn {
+                        padding-top: 4px !important;
+                        padding-bottom: 4px !important;
+                        gap: 4px !important;
+                    }
+                    .fi-page-main {
+                        gap: 4px !important;
+                    }
                     .fi-page {
-                        gap: 3px !important;
+                        gap: 4px !important;
+                    }
+                    .fi-page-content {
+                        gap: 4px !important;
+                    }
+                    .fi-sc,
+                    .fi-sc-has-gap {
+                        gap: 4px !important;
                     }
                     .fi-header {
                         padding-bottom: 0 !important;
-                        margin-bottom: 0 !important;
+                        margin-bottom: 4px !important;
+                    }
+                    .fi-header .fi-breadcrumbs {
+                        margin-bottom: 2px !important;
                     }
                     h1.fi-header-heading {
                         font-size: 20px !important;
@@ -119,7 +141,7 @@ class AdminPanelProvider extends PanelProvider
                     }
                     @media (max-width: 1024px) {
                         .fi-main {
-                            padding-top: 3px !important;
+                            padding-top: 4px !important;
                         }
                     }
                 </style>'),
