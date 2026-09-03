@@ -13,13 +13,16 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\ImportAction::make()
+                ->importer(\App\Filament\Imports\UserImporter::class)
+                ->icon('heroicon-o-arrow-up-tray'),
             Actions\CreateAction::make()
                 ->before(function ($livewire) {
                     $livewire->resetTableSearch();
                 }),
         ];
     }
-    
+
     public function getMaxContentWidth(): ?string
     {
         return 'full';
