@@ -2,22 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use BackedEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use App\Filament\Clusters\UserManagement\UserManagementCluster;
+use BackedEnum;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Forms;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\RestoreAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\RestoreBulkAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -25,11 +24,17 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $cluster = \App\Filament\Clusters\UserManagement\UserManagementCluster::class;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Users';
 
-
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.user_list');
+    }
 
     public static function getModelLabel(): string
     {
@@ -80,7 +85,7 @@ class UserResource extends Resource
             ->modifyQueryUsing(fn ($query) => $query->with(['employee', 'roles']))
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar_url')
-                    ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl() ?? "https://ui-avatars.com/api/?name=" . urlencode($record->name))
+                    ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode($record->name))
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -119,7 +124,7 @@ class UserResource extends Resource
                     ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
                         foreach ($records as $record) {
                             $replica = $record->replicate(['email', 'phone']);
-                            $replica->email = 'copy_' . time() . '_' . uniqid() . '@example.com';
+                            $replica->email = 'copy_'.time().'_'.uniqid().'@example.com';
                             $replica->save();
                         }
                     })
@@ -130,7 +135,7 @@ class UserResource extends Resource
                     ->color('warning')
                     ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
                         \App\Jobs\ExportUsersPdfJob::dispatch($records->pluck('id')->toArray(), auth()->id());
-                        
+
                         \Filament\Notifications\Notification::make()
                             ->title('Export Started')
                             ->body('Your PDF export has been queued and will be ready shortly. You will receive a notification when it is done.')

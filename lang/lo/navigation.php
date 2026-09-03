@@ -11,6 +11,7 @@ return [
     'positions' => 'ຕຳແໜ່ງ',
     'create_position' => 'ສ້າງຕຳແໜ່ງໃໝ່',
     'employee_list' => 'ລາຍການພະນັກງານ',
+    'user_list' => 'ລາຍການຜູ້ໃຊ້',
     'export_by' => 'ຜູ້ດຶງຂໍ້ມູນອອກ',
     'export_date' => 'ວັນທີດຶງຂໍ້ມູນອອກ',
 ];

@@ -11,6 +11,7 @@ return [
     'positions' => 'Positions',
     'create_position' => 'New position',
     'employee_list' => 'Employee list',
+    'user_list' => 'User list',
     'export_by' => 'Export By',
     'export_date' => 'Export Date',
 ];
