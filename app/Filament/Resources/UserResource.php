@@ -83,6 +83,15 @@ class UserResource extends Resource
     {
         return $table
             ->modifyQueryUsing(fn ($query) => $query->with(['employee', 'roles']))
+            ->content(function ($livewire) {
+                if (isset($livewire->activeView) && in_array($livewire->activeView, ['grid', 'kanban'])) {
+                    return view('filament.resources.user-resource.pages.user-grid-content');
+                }
+
+                return null;
+            })
+            ->paginationPageOptions([12, 24, 48, 96])
+            ->defaultPaginationPageOption(24)
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar_url')
                     ->defaultImageUrl(fn ($record) => $record->getFilamentAvatarUrl() ?? 'https://ui-avatars.com/api/?name='.urlencode($record->name))

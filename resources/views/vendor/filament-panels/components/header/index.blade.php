@@ -32,6 +32,9 @@
         @endif
     </div>
 
+    {{-- Center Search Target for Table Search --}}
+    <div id="page-header-search-target" class="fi-header-search-ctn" wire:ignore></div>
+
     @php
         $beforeActions = \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_HEADER_ACTIONS_BEFORE, scopes: $this->getRenderHookScopes());
         $afterActions = \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_HEADER_ACTIONS_AFTER, scopes: $this->getRenderHookScopes());

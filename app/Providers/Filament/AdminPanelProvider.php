@@ -127,8 +127,44 @@ class AdminPanelProvider extends PanelProvider
                         gap: 4px !important;
                     }
                     .fi-header {
+                        position: relative !important;
                         padding-bottom: 0 !important;
                         margin-bottom: 4px !important;
+                    }
+                    .fi-header-search-ctn {
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 360px;
+                        max-width: calc(100% - 380px);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 5;
+                    }
+                    .fi-header-search-ctn .fi-ta-search-field,
+                    .fi-header-search-ctn .fi-input-wrp {
+                        width: 100%;
+                    }
+                    .fi-ta-header-toolbar .fi-ta-search-field-ctn {
+                        display: contents;
+                    }
+                    .fi-ta-view-toggle {
+                        display: inline-flex !important;
+                        flex-direction: row !important;
+                        align-items: center !important;
+                        gap: 4px !important;
+                        white-space: nowrap !important;
+                    }
+                    .fi-ta-view-toggle button,
+                    .fi-ta-view-toggle .fi-icon-btn {
+                        display: inline-flex !important;
+                    }
+                    .is-grid-view .fi-ta-col-manager-dropdown,
+                    .fi-ta-ctn:has(.fi-user-grid-content) .fi-ta-col-manager-dropdown,
+                    .is-grid-view .fi-ta-content-header,
+                    .fi-ta-ctn:has(.fi-user-grid-content) .fi-ta-content-header {
+                        display: none !important;
                     }
                     .fi-header .fi-breadcrumbs {
                         margin-bottom: 2px !important;
@@ -142,6 +178,13 @@ class AdminPanelProvider extends PanelProvider
                     @media (max-width: 1024px) {
                         .fi-main {
                             padding-top: 4px !important;
+                        }
+                        .fi-header-search-ctn {
+                            position: static;
+                            transform: none;
+                            width: 100%;
+                            max-width: 100%;
+                            margin-top: 0.5rem;
                         }
                     }
                 </style>'),
