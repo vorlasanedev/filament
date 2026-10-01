@@ -126,6 +126,10 @@ class AdminPanelProvider extends PanelProvider
                     .fi-sc-has-gap {
                         gap: 4px !important;
                     }
+                    .fi-modal-window .fi-sc,
+                    .fi-modal-window .fi-sc-has-gap {
+                        gap: 1rem !important;
+                    }
                     .fi-header {
                         position: relative !important;
                         padding-bottom: 0 !important;

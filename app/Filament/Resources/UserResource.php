@@ -17,10 +17,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Traits\HasEnterprisePermissions;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+    use HasEnterprisePermissions;
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
@@ -130,8 +132,21 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Filters\TrashedFilter::make(),
             ])
+            ->recordAction('view_profile')
             ->recordActions([
-
+                \Filament\Actions\Action::make('view_profile')
+                    ->label('View Profile')
+                    ->icon('heroicon-o-identification')
+                    ->color('info')
+                    ->slideOver()
+                    ->modalWidth('5xl')
+                    ->modalHeading(fn (?User $record) => $record ? "User Profile: {$record->name}" : 'User Profile')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close')
+                    ->modalContent(fn (?User $record) => $record ? view('filament.resources.user-resource.modals.user-profile-view', [
+                        'user' => $record,
+                        'profileData' => app(\App\Services\UserProfileService::class)->getProfileData($record),
+                    ]) : null),
                 EditAction::make(),
                 DeleteAction::make(),
                 RestoreAction::make(),

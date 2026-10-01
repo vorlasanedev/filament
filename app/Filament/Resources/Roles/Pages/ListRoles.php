@@ -15,7 +15,11 @@ class ListRoles extends ListRecords
     protected function getActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->modalWidth('7xl')
+                ->after(function (\Spatie\Permission\Models\Role $record, array $data) {
+                    RoleResource::syncPermissionsFromFormData($record, $data);
+                }),
         ];
     }
 

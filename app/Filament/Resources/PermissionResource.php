@@ -10,8 +10,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
+use App\Traits\HasEnterprisePermissions;
+
 class PermissionResource extends Resource
 {
+    use HasEnterprisePermissions;
     protected static ?string $model = Permission::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-key';

@@ -79,7 +79,6 @@ class EmployeesTable
                 TextColumn::make('position.name')
                     ->label(__('fields.position'))
                     ->searchable()
-                    ->sortable()
                     ->toggleable(),
                 TextColumn::make('salary')
                     ->label(__('fields.salary'))
@@ -91,7 +90,12 @@ class EmployeesTable
             ])
             ->filters([
                 SelectFilter::make('position')
-                    ->relationship('position', 'name')
+                    ->relationship(
+                        name: 'position',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->orderBy('id'),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (\App\Models\Position $record) => $record->name)
                     ->label(__('fields.position')),
                 Filter::make('salary')
                     ->label(__('fields.salary'))

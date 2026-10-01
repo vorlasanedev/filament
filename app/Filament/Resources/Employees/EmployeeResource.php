@@ -16,8 +16,11 @@ use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Schemas\EmployeeForm;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
 
+use App\Traits\HasEnterprisePermissions;
+
 class EmployeeResource extends Resource
 {
+    use HasEnterprisePermissions;
     protected static ?string $model = Employee::class;
     protected static string|\UnitEnum|null $navigationGroup = null;
     protected static ?string $navigationLabel = null;

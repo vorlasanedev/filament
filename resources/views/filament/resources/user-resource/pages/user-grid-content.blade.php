@@ -184,10 +184,10 @@
 
     {{-- 4-Column Responsive Card Grid --}}
     <div class="user-grid-layout">
-        @forelse ($records as $user)
             <div
                 class="user-card-item"
-                wire:click="mountTableAction('edit', '{{ $user->id }}')"
+                wire:click="mountTableAction('view_profile', '{{ $user->id }}')"
+                title="Click to view detailed user profile"
             >
                 {{-- Card Header: Avatar on left, Status Badge on right --}}
                 <div class="user-card-header">

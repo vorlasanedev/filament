@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Roles;
 
+use App\Filament\Forms\Components\PermissionMatrix;
 use App\Filament\Resources\Roles\Pages\ListRoles;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use BezhanSalleh\FilamentShield\Support\Utils;
-use BezhanSalleh\FilamentShield\Traits\HasShieldFormComponents;
-use BezhanSalleh\PluginEssentials\Concerns\Resource as Essentials;
+use App\Traits\HasEnterprisePermissions;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Facades\Filament;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Panel;
 use Filament\Resources\Resource;
@@ -24,21 +20,11 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Unique;
+use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
-    use Essentials\BelongsToParent;
-    use Essentials\BelongsToTenant;
-    use Essentials\HasGlobalSearch;
-    use Essentials\HasLabels;
-    use Essentials\HasNavigation {
-        Essentials\HasNavigation::delegateToPlugin insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
-        Essentials\HasNavigation::isNoPluginResult insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
-        Essentials\HasNavigation::pluginUsesTrait insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
-        Essentials\HasNavigation::getParentResult insteadof Essentials\BelongsToParent, Essentials\BelongsToTenant, Essentials\HasGlobalSearch, Essentials\HasLabels;
-    }
-    use HasShieldFormComponents;
+    use HasEnterprisePermissions;
 
     protected static ?int $navigationSort = 2;
 
@@ -55,42 +41,41 @@ class RoleResource extends Resource
             ->components([
                 Grid::make()
                     ->schema([
-                        Section::make()
+                        Section::make('Role Details')
                             ->schema([
                                 TextInput::make('name')
-                                    ->label(__('filament-shield::filament-shield.field.name'))
-                                    ->unique(
-                                        ignoreRecord: true, /** @phpstan-ignore-next-line */
-                                        modifyRuleUsing: fn (Unique $rule): Unique => Utils::isTenancyEnabled() ? $rule->where(Utils::getTenantModelForeignKey(), Filament::getTenant()?->id) : $rule
-                                    )
+                                    ->label('Role Name')
+                                    ->unique(ignoreRecord: true)
                                     ->required()
                                     ->maxLength(255),
 
                                 TextInput::make('guard_name')
-                                    ->label(__('filament-shield::filament-shield.field.guard_name'))
-                                    ->default(Utils::getFilamentAuthGuard())
-                                    ->nullable()
+                                    ->label('Guard Name')
+                                    ->default('web')
+                                    ->required()
                                     ->maxLength(255),
-
-                                Select::make(config('permission.column_names.team_foreign_key'))
-                                    ->label(__('filament-shield::filament-shield.field.team'))
-                                    ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
-                                    /** @phpstan-ignore-next-line */
-                                    ->default(Filament::getTenant()?->id)
-                                    ->options(fn (): array => in_array(Utils::getTenantModel(), [null, '', '0'], true) ? [] : Utils::getTenantModel()::pluck('name', 'id')->toArray())
-                                    ->visible(fn (): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled())
-                                    ->dehydrated(fn (): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled()),
-                                static::getSelectAllFormComponent(),
-
                             ])
-                            ->columns([
-                                'sm' => 2,
-                                'lg' => 3,
+                            ->columns(2)
+                            ->columnSpanFull(),
+
+                        Section::make('Permission Matrix')
+                            ->description('Control granular access per Model, Page, Cluster, and Widget in real-time.')
+                            ->schema([
+                                PermissionMatrix::make('permissions')
+                                    ->hiddenLabel()
+                                    ->afterStateHydrated(function ($component, ?Role $record) {
+                                        if (! $record) {
+                                            $component->state([]);
+                                            return;
+                                        }
+                                        $component->state($record->permissions->pluck('name')->toArray());
+                                    })
+                                    ->dehydrated(true)
+                                    ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
-                static::getShieldFormComponents(),
             ]);
     }
 
@@ -100,34 +85,31 @@ class RoleResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->weight(FontWeight::Medium)
-                    ->label(__('filament-shield::filament-shield.column.name'))
+                    ->label('Role Name')
                     ->formatStateUsing(fn (string $state): string => Str::headline($state))
                     ->searchable(),
                 TextColumn::make('guard_name')
                     ->badge()
                     ->color('warning')
-                    ->label(__('filament-shield::filament-shield.column.guard_name')),
-                TextColumn::make('team.name')
-                    ->default('Global')
-                    ->badge()
-                    ->color(fn (mixed $state): string => str($state)->contains('Global') ? 'gray' : 'primary')
-                    ->label(__('filament-shield::filament-shield.column.team'))
-                    ->searchable()
-                    ->visible(fn (): bool => static::shield()->isCentralApp() && Utils::isTenancyEnabled()),
+                    ->label('Guard'),
                 TextColumn::make('permissions_count')
                     ->badge()
-                    ->label(__('filament-shield::filament-shield.column.permissions'))
+                    ->label('Permissions')
                     ->counts('permissions')
                     ->color('primary'),
                 TextColumn::make('updated_at')
-                    ->label(__('filament-shield::filament-shield.column.updated_at'))
+                    ->label('Updated At')
                     ->dateTime(),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalWidth('7xl')
+                    ->after(function (Role $record, array $data) {
+                        static::syncPermissionsFromFormData($record, $data);
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
@@ -135,11 +117,19 @@ class RoleResource extends Resource
             ]);
     }
 
+    /**
+     * Synchronize permissions from matrix form data into the role.
+     */
+    public static function syncPermissionsFromFormData(Role $record, array $data): void
+    {
+        if (isset($data['permissions']) && is_array($data['permissions'])) {
+            $record->syncPermissions(array_values(array_unique($data['permissions'])));
+        }
+    }
+
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -151,12 +141,12 @@ class RoleResource extends Resource
 
     public static function getModel(): string
     {
-        return Utils::getRoleModel();
+        return Role::class;
     }
 
     public static function getSlug(?Panel $panel = null): string
     {
-        return Utils::getResourceSlug();
+        return 'roles';
     }
 
     public static function getCluster(): ?string
@@ -172,10 +162,5 @@ class RoleResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 2;
-    }
-
-    public static function getEssentialsPlugin(): ?FilamentShieldPlugin
-    {
-        return FilamentShieldPlugin::get();
     }
 }

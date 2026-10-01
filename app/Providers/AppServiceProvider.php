@@ -30,5 +30,11 @@ class AppServiceProvider extends ServiceProvider
                     'lo' => asset('images/flags/laos.png'),
                 ]);
         });
+
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            return ($user->hasRole('Super Admin') || $user->hasRole('super_admin')) ? true : null;
+        });
+
+        \Illuminate\Support\Facades\Gate::policy(\Spatie\Permission\Models\Permission::class, \App\Policies\PermissionPolicy::class);
     }
 }

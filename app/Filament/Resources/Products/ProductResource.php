@@ -15,8 +15,11 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
+use App\Traits\HasEnterprisePermissions;
+
 class ProductResource extends Resource
 {
+    use HasEnterprisePermissions;
     protected static ?string $model = Product::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';

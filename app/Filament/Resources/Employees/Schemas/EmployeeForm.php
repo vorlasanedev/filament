@@ -104,7 +104,12 @@ class EmployeeForm
                     }),
                 \Filament\Forms\Components\Select::make('position_id')
                     ->label(__('fields.position'))
-                    ->relationship('position', 'name')
+                    ->relationship(
+                        name: 'position',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->orderBy('id'),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (\App\Models\Position $record) => $record->name)
                     ->searchable()
                     ->preload()
                     ->createOptionForm([

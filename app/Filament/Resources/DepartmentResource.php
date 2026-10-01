@@ -15,8 +15,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 
+use App\Traits\HasEnterprisePermissions;
+
 class DepartmentResource extends Resource
 {
+    use HasEnterprisePermissions;
     protected static ?string $model = Department::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
